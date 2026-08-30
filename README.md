@@ -1,61 +1,74 @@
-# Remansa Villas: Coastal Retreats
+# Remansa — Villas frente al Mediterráneo
 
-Quiero crear "Remansa", un proyecto de desarrollo a medida (no SaaS) para un portfolio de 3 villas de alquiler vacacional en la costa mediterránea. Empecemos por dos piezas piloto: la landing colectiva y la landing individual de "Villa Azahar".
+Caso de uso de **desarrollo a medida** para un portfolio pequeño de alquiler vacacional (tres villas). No es un SaaS multi-tenant: es la web y las herramientas internas de un único negocio, con su propia identidad visual, su portal del huésped y su backoffice.
 
-CONCEPTO DE MARCA
-Remansa transmite calma y refugio. Tono de voz cálido y sensorial, apela a los sentidos (luz, sal, brisa, aroma a azahar), no a características técnicas frías tipo portal de reservas genérico.
+Caso de uso desarrollado por **Isaac Wesley** para **Vivir de IA**.
 
-DIRECCIÓN VISUAL
-- Paleta: blancos cálidos, azul mediterráneo, terracota suave, verde oliva como acento
-- Tipografía: una serif elegante para titulares (sensación editorial) + sans limpia para cuerpo
-- Fotografía/imaginería: luz natural, golden hour, detalles sensoriales
-- Espacios en blanco generosos, nada de densidad tipo Booking/Airbnb
+---
 
-LAS TRES VILLAS (para referencia, hoy construimos la colectiva + Villa Azahar)
-- Villa Azahar: la más luminosa, jardín de cítricos, ideal familias. Tagline: "Donde el aire huele a azahar". Acento de color: amarillo suave
-- Villa Poniente: la más romántica, vistas al atardecer, ideal parejas. Tagline: "Un atardecer distinto cada noche". Acento: naranja atardecer
-- Villa Salobre: la más salvaje, acceso directo a cala, ideal grupos de amigos. Tagline: "A un paso del mar, lejos de todo lo demás". Acento: azul profundo
+## Qué es real y qué está simulado
 
-LANDING COLECTIVA (home)
-1. Hero a pantalla completa. Titular: "Tres refugios frente al Mediterráneo". Subtitular: "Villas con carácter propio, pensadas para desconectar de verdad". CTA: "Descubre tu villa"
-2. Presentación de las tres villas: tarjetas grandes con foto, nombre, tagline y botón "Conocer Villa X" (por ahora solo Villa Azahar enlaza a página real, las otras dos pueden ser placeholders "Próximamente")
-3. Sección "Por qué Remansa" con 3-4 puntos diferenciales: "Cada villa se cuida como si fuera la única", "Guía local hecha a mano", "Check-in sin fricciones"
-4. Sección de ubicación (mapa ilustrativo con las tres villas y qué hay cerca)
-5. Reseñas/testimonios
-6. Footer con contacto, idiomas, redes
+### Real / funcional
+Todo el estado dinámico persiste en `localStorage` a través de `src/lib/remansa-storage.ts`, sin backend:
 
-LANDING VILLA AZAHAR (/villa-azahar)
-1. Hero: "Villa Azahar" / "Donde el aire huele a azahar", foto de fachada con jardín de cítricos
-2. Descripción emocional: "Hay casas que se visitan y casas que se recuerdan. Villa Azahar es de las segundas. Un jardín de naranjos que perfuma cada mañana, una piscina que mira al mar y habitaciones pensadas para que el silencio también forme parte de las vacaciones."
-3. Ficha práctica: 4 habitaciones, 3 baños, hasta 8 huéspedes, piscina privada, jardín de cítricos, parking, a 8 minutos a pie de la playa
-4. Amenities con iconografía: wifi, piscina, aire acondicionado, cocina equipada, mascotas admitidas, parking
-5. Galería de fotos organizada por espacios (usa imágenes de stock de alta calidad tipo villa mediterránea mientras no hay fotos reales)
-6. Calendario y precios: disponibilidad visual, precio por temporada
-7. Formulario de reserva directa (simulado, sin pasarela de pago real todavía)
-8. "Qué hay cerca": 3-4 recomendaciones locales con foto (cala, restaurante de pescado, mercado local)
-9. Reseñas específicas de Villa Azahar
+- **Reservas y bloqueos** del calendario multi-propiedad
+- **Limpiezas** (pendiente / completada)
+- **Incidencias** de mantenimiento (abierta / en curso / resuelta)
+- **Mensajería** compartida entre el portal del huésped y el backoffice
+- **Contenido web editable** de las tres landings (textos, ficha, precios por temporada, políticas)
 
-Usa contenido de ejemplo realista y cuidado (no lorem ipsum). El resultado debe sentirse como una marca boutique cuidada, no como una plantilla de portal de reservas.
+La primera carga siembra automáticamente los datos iniciales. A partir de ahí, todas las lecturas y escrituras van contra `localStorage`, con `try/catch` y fallback en memoria si el navegador lo bloquea.
 
-This project was built with [Lovable](https://lovable.dev).
+### Simulado
+- **Login del backoffice**: acepta cualquier credencial, no hay autenticación real
+- **Formulario de reserva y pago**: no procesa cobros ni pasarela
+- **Acceso al portal del huésped**: por código de reserva (p. ej. `AZAHAR-2026`), sin cuentas ni contraseñas
+- **Mensajería**: no envía correos ni WhatsApp reales
 
-**Live app**: https://remansa-villa-escapes.lovable.app
+---
 
-## Build with Lovable
+## Estructura
 
-Continue developing this project in the [Lovable editor](https://lovable.dev/projects/70659a42-33d2-4ef1-aa4e-5edcdad33a7d).
+| Ruta | Qué es |
+| --- | --- |
+| `/` | Landing colectiva: hero, portfolio de villas, filosofía, mapa interactivo (Leaflet), reseñas |
+| `/villa-azahar` | Landing individual |
+| `/villa-poniente` | Landing individual |
+| `/villa-salobre` | Landing individual |
+| `/mi-estancia` | Portal del huésped: acceso por código, cuenta atrás, guía de la casa, check-in/out, recomendaciones, contacto |
+| `/admin` | Backoffice: calendario, limpiezas, incidencias, ocupación e ingresos, mensajería y **Contenido web** |
 
-- **Ship faster**: describe what you want to build and Lovable handles the code.
-- **Stay in sync**: every change made in Lovable is committed straight to this repository.
-- **Full ownership**: this code is yours. Push to `main` on GitHub and your changes sync back into Lovable, ready for your next prompt.
+Cada landing individual repite la misma estructura: hero, descripción emocional, ficha práctica, amenities, galería por espacios, calendario y precios, formulario de reserva, qué hay cerca, condiciones y reseñas.
 
-## Development
+### Archivos clave
 
-Prefer working locally? You need Node.js and npm — [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating).
+- `src/lib/remansa-data.ts` — datos estáticos de las villas (nombre, imágenes, wifi, indicaciones, recomendaciones, tarifas base)
+- `src/lib/remansa-storage.ts` — persistencia: claves, semillas, getters/setters y hooks reactivos
+- `src/components/admin/ContenidoWeb.tsx` — editor de contenido de las landings
+- `src/components/site/` — cabecera, pie, mapa y bloques compartidos
+- `src/styles.css` — sistema de diseño (Cormorant Garamond + Jost, paleta cálida, acentos por villa)
+
+---
+
+## Cómo adaptarlo a un caso real
+
+Azahar, Poniente y Salobre son **solo contenido de muestra**. La estructura de datos admite añadir, quitar o renombrar propiedades sin tocar el diseño:
+
+1. Edita `src/lib/remansa-data.ts`: cada villa es una entrada con su slug, acento de color, imágenes, ficha y tarifas.
+2. Duplica una ruta de villa en `src/routes/` para cada propiedad nueva y apunta al slug correspondiente.
+3. Sustituye las imágenes de `src/assets/` por las fotos reales.
+4. Ajusta textos, precios y políticas desde el propio panel **Contenido web** del backoffice, sin tocar código.
+5. Para producción real, sustituye `remansa-storage.ts` por una capa de datos con backend manteniendo la misma firma de funciones.
+
+El backoffice incluye un botón **Restablecer datos** en la cabecera que borra el almacenamiento local y vuelve a sembrar el estado inicial en cualquier momento.
+
+---
+
+## Desarrollo
 
 ```sh
-git clone <this-repository-url>
-cd <repository-name>
 npm i
 npm run dev
 ```
+
+Stack: React 19 + TanStack Start (router basado en archivos), Vite 7, Tailwind CSS v4, Leaflet para el mapa.
