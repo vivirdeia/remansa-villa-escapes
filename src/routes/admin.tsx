@@ -1,13 +1,23 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
-import { LogOut } from "lucide-react";
+import { LogOut, RotateCcw } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 import { eur, villas, type VillaId } from "@/lib/remansa-data";
+import {
+  añadirMensaje,
+  restablecerDemo,
+  sembrarSiHaceFalta,
+  useBookings,
+  useConversaciones,
+  useIncidencias,
+  useLimpiezas,
+  type Booking,
+} from "@/lib/remansa-storage";
 
 export const Route = createFileRoute("/admin")({
   head: () => ({
