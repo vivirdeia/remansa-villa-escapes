@@ -39,7 +39,7 @@ export const Route = createFileRoute("/admin")({
   component: Admin,
 });
 
-/* ---------------- datos de ejemplo ---------------- */
+/* ---------------- indicadores ---------------- */
 
 
 const ocupacion: { villa: VillaId; noches: number; disponibles: number; ingresos: number; adr: number }[] = [
@@ -171,7 +171,7 @@ function Login({ onEntrar }: { onEntrar: () => void }) {
         onSubmit={(e) => {
           e.preventDefault();
           onEntrar();
-          toast.success("Sesión iniciada (demo)");
+          toast.success("Sesión iniciada");
         }}
         className="w-full max-w-sm border border-border bg-card p-10"
       >
@@ -187,13 +187,13 @@ function Login({ onEntrar }: { onEntrar: () => void }) {
           </div>
           <div>
             <Label htmlFor="pass">Contraseña</Label>
-            <Input id="pass" type="password" defaultValue="demo1234" className="mt-2" />
+            <Input id="pass" type="password" defaultValue="remansa2026" className="mt-2" />
           </div>
           <Button type="submit" className="w-full">
             Entrar
           </Button>
           <p className="text-xs text-muted-foreground">
-            Acceso simulado: cualquier credencial es válida en esta demo.
+            Acceso restringido al equipo de Remansa.
           </p>
         </div>
       </form>
