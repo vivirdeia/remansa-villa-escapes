@@ -203,6 +203,10 @@ function Login({ onEntrar }: { onEntrar: () => void }) {
 
 /* ---------------- calendario ---------------- */
 
+function fechaCorta(iso: string) {
+  return new Date(`${iso}T00:00:00`).toLocaleDateString("es-ES", { day: "numeric", month: "short" });
+}
+
 const dias = Array.from({ length: 30 }, (_, i) => i + 1);
 
 function Calendario() {
