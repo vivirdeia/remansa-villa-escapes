@@ -286,25 +286,34 @@ function Home() {
               ))}
               {lugares.map((l) => (
                 <g key={l.villa}>
+                  <text
+                    x={l.x}
+                    y={l.y - 5.2}
+                    textAnchor="middle"
+                    fill="var(--ink)"
+                    fontFamily="var(--font-serif)"
+                    fontSize="3.1"
+                    letterSpacing="0.05"
+                  >
+                    {l.villa}
+                  </text>
                   <circle cx={l.x} cy={l.y} r="3.4" fill="var(--sand)" stroke="var(--border)" strokeWidth="0.3" />
                   <circle cx={l.x} cy={l.y} r="1.5" fill={l.color} />
                 </g>
               ))}
+              <text
+                x="96"
+                y="70"
+                textAnchor="end"
+                fill="var(--muted-foreground)"
+                fontSize="2.1"
+                letterSpacing="0.5"
+                fontFamily="var(--font-sans)"
+              >
+                MAR MEDITERRÁNEO
+              </text>
             </svg>
-            <div className="pointer-events-none absolute inset-0">
-              {lugares.map((l) => (
-                <span
-                  key={l.villa}
-                  className="absolute -translate-x-1/2 whitespace-nowrap font-serif text-[0.7rem] tracking-wide text-ink md:text-xs"
-                  style={{ left: `${l.x}%`, top: `${(l.y / 75) * 100 + 7}%` }}
-                >
-                  {l.villa}
-                </span>
-              ))}
-              <span className="absolute bottom-4 right-5 text-[0.6rem] uppercase tracking-[0.24em] text-muted-foreground">
-                Mar Mediterráneo
-              </span>
-            </div>
+
           </div>
         </div>
       </section>
