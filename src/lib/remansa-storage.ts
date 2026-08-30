@@ -21,12 +21,20 @@ export type Booking = {
   id: string;
   villa: VillaId;
   huesped: string;
-  desde: number; // día de septiembre 2026
+  desde: number; // día de septiembre 2026 (0 si la estancia cae fuera del mes en pantalla)
   hasta: number;
   estado: EstadoReserva;
   total: number;
   canal: string;
+  /** Código de acceso al portal del huésped (solo en reservas creadas desde la web). */
+  codigo?: string;
+  llegada?: string; // ISO
+  salida?: string; // ISO
+  huespedes?: number;
+  email?: string;
+  nota?: string;
 };
+
 
 export type Limpieza = {
   id: string;
