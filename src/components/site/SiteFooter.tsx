@@ -21,8 +21,16 @@ export function SiteFooter() {
                   Villa Azahar
                 </Link>
               </li>
-              <li className="opacity-60">Villa Poniente — próximamente</li>
-              <li className="opacity-60">Villa Salobre — próximamente</li>
+              <li>
+                <Link to="/villa-poniente" className="transition-colors hover:text-sea">
+                  Villa Poniente
+                </Link>
+              </li>
+              <li>
+                <Link to="/villa-salobre" className="transition-colors hover:text-sea">
+                  Villa Salobre
+                </Link>
+              </li>
             </ul>
           </div>
 

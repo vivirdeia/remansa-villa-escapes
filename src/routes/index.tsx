@@ -48,8 +48,8 @@ const villas = [
     note: "La más romántica · Vistas al ocaso · Parejas",
     img: ponienteCard,
     accent: "bg-poniente",
-    to: null,
-    ready: false,
+    to: "/villa-poniente" as const,
+    ready: true,
   },
   {
     name: "Villa Salobre",
@@ -57,8 +57,8 @@ const villas = [
     note: "La más salvaje · Acceso a cala · Grupos",
     img: salobreCard,
     accent: "bg-salobre",
-    to: null,
-    ready: false,
+    to: "/villa-salobre" as const,
+    ready: true,
   },
 ];
 
