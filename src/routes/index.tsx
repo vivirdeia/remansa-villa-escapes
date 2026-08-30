@@ -296,7 +296,7 @@ function Home() {
                 <span
                   key={l.villa}
                   className="absolute -translate-x-1/2 whitespace-nowrap font-serif text-[0.7rem] tracking-wide text-ink md:text-xs"
-                  style={{ left: `${l.x}%`, top: `calc(${l.y}% + 4%)` }}
+                  style={{ left: `${l.x}%`, top: `${(l.y / 75) * 100 + 7}%` }}
                 >
                   {l.villa}
                 </span>
