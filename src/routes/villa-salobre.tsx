@@ -123,6 +123,19 @@ const meses = [
 ];
 
 function VillaSalobre() {
+  const contenido = useContenidoVilla("salobre");
+  const ficha = useMemo(
+    () =>
+      [
+        `${contenido.habitaciones} habitaciones`,
+        `${contenido.banos} baños`,
+        `Hasta ${contenido.huespedesMax} huéspedes`,
+        ...contenido.fichaExtra,
+      ]
+        .filter(Boolean)
+        .map((label, i) => ({ label, Icon: iconosFicha[Math.min(i, iconosFicha.length - 1)]! })),
+    [contenido],
+  );
   const [mesActivo, setMesActivo] = useState(0);
   const mes = meses[mesActivo]!;
   const celdas = useMemo(
@@ -188,15 +201,9 @@ function VillaSalobre() {
       <section className="mx-auto max-w-3xl px-6 py-28 md:py-36">
         <p className="eyebrow text-center">La casa</p>
         <p className="display-md mt-8 text-balance text-center leading-snug text-ink">
-          Aquí la casa no compite con el paisaje: se deja ganar. Piedra seca, pino carrasco y una
-          escalera que baja hasta el agua.
+          {contenido.descripcionTitulo}
         </p>
-        <p className="lede mt-8 text-center">
-          Villa Salobre está construida en el borde, donde el monte se rompe y empieza el azul. Se
-          duerme con la ventana abierta y el ruido del mar contra las rocas, se come tarde en una
-          mesa de catorce y se pasa el día descalzo. No hay vecinos, no hay cobertura en la cala y
-          no hace ninguna falta.
-        </p>
+        <p className="lede mt-8 text-center">{contenido.descripcion}</p>
       </section>
 
       {/* Ficha práctica */}
@@ -206,7 +213,7 @@ function VillaSalobre() {
           <div className="mt-10 grid grid-cols-2 gap-x-8 gap-y-8 md:grid-cols-4 lg:grid-cols-7">
             {ficha.map((f) => (
               <div key={f.label} className="border-t border-border pt-5">
-                <f.icon className="size-5 text-olive" strokeWidth={1.25} />
+                <f.Icon className="size-5 text-olive" strokeWidth={1.25} />
                 <p className="mt-4 text-sm leading-snug text-foreground">{f.label}</p>
               </div>
             ))}
@@ -341,7 +348,7 @@ function VillaSalobre() {
             <p className="eyebrow">Precios por noche</p>
             <h2 className="display-lg mt-5 text-ink">Sin comisiones de portal</h2>
             <ul className="mt-9">
-              {temporadas.map((t) => (
+              {contenido.temporadas.map((t) => (
                 <li
                   key={t.nombre}
                   className="flex items-baseline justify-between gap-6 border-b border-border py-5"
@@ -349,21 +356,24 @@ function VillaSalobre() {
                   <div>
                     <p className="font-serif text-xl text-ink">{t.nombre}</p>
                     <p className="mt-1 text-xs uppercase tracking-[0.14em] text-muted-foreground">
-                      {t.meses} · mínimo {t.min}
+                      {t.meses} · mínimo {t.minNoches} noches
                     </p>
                   </div>
-                  <p className="whitespace-nowrap font-serif text-2xl text-sea">{t.precio}</p>
+                  <p className="whitespace-nowrap font-serif text-2xl text-sea">{t.precio} €</p>
                 </li>
               ))}
             </ul>
             <p className="mt-6 text-xs leading-relaxed text-muted-foreground">
-              Limpieza final 210 €. Ropa de cama y toallas incluidas. Fianza 900 € devuelta a las 48
-              h de la salida. Grupos de más de doce personas y despedidas: consúltanos antes de
-              reservar.
+              Limpieza final {contenido.limpiezaFinal} €. Ropa de cama y toallas incluidas. Fianza{" "}
+              {contenido.fianza} € devuelta a las 48 h de la salida. Grupos de más de doce personas
+              y despedidas: consúltanos antes de reservar.
             </p>
           </div>
         </div>
       </section>
+
+      <CondicionesCasa contenido={contenido} />
+
 
       {/* Reserva */}
       <section id="reservar" className="scroll-mt-24 surface-sand py-24 md:py-32">
