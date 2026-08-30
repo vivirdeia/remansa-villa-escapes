@@ -183,11 +183,11 @@ function Login({ onEntrar }: { onEntrar: () => void }) {
         <div className="mt-8 space-y-4">
           <div>
             <Label htmlFor="user">Usuario</Label>
-            <Input id="user" defaultValue="marta@remansa.es" className="mt-2" />
+            <Input id="user" defaultValue="marta@remansa.es" className="mt-2 h-11" />
           </div>
           <div>
             <Label htmlFor="pass">Contraseña</Label>
-            <Input id="pass" type="password" defaultValue="remansa2026" className="mt-2" />
+            <Input id="pass" type="password" defaultValue="remansa2026" className="mt-2 h-11" />
           </div>
           <Button type="submit" className="w-full">
             Entrar
@@ -253,7 +253,7 @@ function Calendario() {
             key={f}
             onClick={() => setFiltro(f)}
             className={cn(
-              "border px-3 py-2 text-xs uppercase tracking-[0.14em] transition-colors",
+              "h-11 border px-4 text-xs uppercase tracking-[0.14em] transition-colors",
               filtro === f ? "border-ink bg-ink text-background" : "border-border text-muted-foreground hover:text-ink",
             )}
           >
@@ -264,7 +264,7 @@ function Calendario() {
 
       <div className="mt-8 overflow-x-auto border border-border bg-card">
         <div className="min-w-[900px]">
-          <div className="grid grid-cols-[180px_1fr] border-b border-border">
+          <div className="grid grid-cols-[140px_1fr] sm:grid-cols-[180px_1fr] border-b border-border">
             <div className="px-4 py-3 text-[0.65rem] uppercase tracking-[0.16em] text-muted-foreground">
               Villa
             </div>
@@ -281,7 +281,7 @@ function Calendario() {
           </div>
 
           {lista.map((v) => (
-            <div key={v} className="grid grid-cols-[180px_1fr] border-b border-border last:border-b-0">
+            <div key={v} className="grid grid-cols-[140px_1fr] sm:grid-cols-[180px_1fr] border-b border-border last:border-b-0">
               <div className="px-4 py-5">
                 <p className="text-sm text-ink">{villas[v].name}</p>
                 <p className="text-xs text-muted-foreground">Hasta {villas[v].huespedesMax} pax</p>
@@ -338,7 +338,7 @@ function Calendario() {
             id="bl-villa"
             name="villa"
             defaultValue="azahar"
-            className="mt-2 h-10 w-full border border-border bg-background px-3 text-sm text-ink"
+            className="mt-2 h-11 w-full border border-border bg-background px-3 text-sm text-ink"
           >
             {(Object.keys(villas) as VillaId[]).map((v) => (
               <option key={v} value={v}>
@@ -349,11 +349,11 @@ function Calendario() {
         </div>
         <div>
           <Label htmlFor="bl-desde" className="eyebrow">Del día</Label>
-          <Input id="bl-desde" name="desde" type="number" min={1} max={30} defaultValue={1} className="mt-2" />
+          <Input id="bl-desde" name="desde" type="number" min={1} max={30} defaultValue={1} className="mt-2 h-11" />
         </div>
         <div>
           <Label htmlFor="bl-hasta" className="eyebrow">Al día</Label>
-          <Input id="bl-hasta" name="hasta" type="number" min={1} max={30} defaultValue={2} className="mt-2" />
+          <Input id="bl-hasta" name="hasta" type="number" min={1} max={30} defaultValue={2} className="mt-2 h-11" />
         </div>
         <div>
           <Label htmlFor="bl-motivo" className="eyebrow">Motivo del bloqueo</Label>
@@ -365,7 +365,7 @@ function Calendario() {
 
 
       <div className="mt-10 overflow-x-auto border border-border bg-card">
-        <table className="w-full text-sm">
+        <table className="w-full min-w-[760px] text-sm">
           <thead>
             <tr className="border-b border-border text-left text-[0.65rem] uppercase tracking-[0.16em] text-muted-foreground">
               <th className="px-4 py-3">Ref.</th>
@@ -436,7 +436,7 @@ function Pill({ estado }: { estado: string }) {
 function Encabezado({ titulo, sub }: { titulo: string; sub: string }) {
   return (
     <div>
-      <h1 className="font-serif text-3xl text-ink">{titulo}</h1>
+      <h1 className="font-serif text-2xl text-ink sm:text-3xl">{titulo}</h1>
       <p className="mt-2 text-sm text-muted-foreground">{sub}</p>
     </div>
   );
@@ -463,7 +463,7 @@ function Limpiezas() {
         sub={`${pendientes} tareas pendientes de ${items.length} programadas.`}
       />
       <div className="mt-8 overflow-x-auto border border-border bg-card">
-        <table className="w-full text-sm">
+        <table className="w-full min-w-[760px] text-sm">
           <thead>
             <tr className="border-b border-border text-left text-[0.65rem] uppercase tracking-[0.16em] text-muted-foreground">
               <th className="px-4 py-3">Estado</th>
@@ -538,7 +538,7 @@ function Incidencias() {
             key={f}
             onClick={() => setFiltro(f)}
             className={cn(
-              "border px-3 py-2 text-xs uppercase tracking-[0.14em] transition-colors",
+              "h-11 border px-4 text-xs uppercase tracking-[0.14em] transition-colors",
               filtro === f ? "border-ink bg-ink text-background" : "border-border text-muted-foreground hover:text-ink",
             )}
           >
@@ -548,7 +548,7 @@ function Incidencias() {
       </div>
 
       <div className="mt-8 overflow-x-auto border border-border bg-card">
-        <table className="w-full text-sm">
+        <table className="w-full min-w-[760px] text-sm">
           <thead>
             <tr className="border-b border-border text-left text-[0.65rem] uppercase tracking-[0.16em] text-muted-foreground">
               <th className="px-4 py-3">Ref.</th>
@@ -619,7 +619,7 @@ function Ingresos() {
       </div>
 
       <div className="mt-8 overflow-x-auto border border-border bg-card">
-        <table className="w-full text-sm">
+        <table className="w-full min-w-[760px] text-sm">
           <thead>
             <tr className="border-b border-border text-left text-[0.65rem] uppercase tracking-[0.16em] text-muted-foreground">
               <th className="px-4 py-3">Villa</th>
@@ -766,8 +766,8 @@ function Mensajeria() {
               </Burbuja>
             ))}
           </div>
-          <form onSubmit={responder} className="flex gap-3 border-t border-border p-4">
-            <Input name="respuesta" placeholder="Escribe una respuesta…" required />
+          <form onSubmit={responder} className="flex flex-col gap-3 border-t border-border p-4 sm:flex-row">
+            <Input name="respuesta" placeholder="Escribe una respuesta…" className="h-11" required />
             <Button type="submit">Enviar</Button>
           </form>
         </div>
