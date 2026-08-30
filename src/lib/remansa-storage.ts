@@ -157,6 +157,7 @@ export const STORAGE_KEYS = {
   limpiezas: "remansa.limpiezas",
   incidencias: "remansa.incidencias",
   conversaciones: "remansa.conversaciones",
+  contenido: "remansa.contenido",
 } as const;
 
 export type StorageKey = (typeof STORAGE_KEYS)[keyof typeof STORAGE_KEYS];
@@ -254,6 +255,7 @@ export function sembrarSiHaceFalta() {
   getLimpiezas();
   getIncidencias();
   getConversaciones();
+  getContenidos();
 }
 
 /** Borra el estado de la demo y vuelve a sembrar los datos originales. */
@@ -350,3 +352,179 @@ export const useIncidencias = () =>
   useColeccion<Incidencia>(STORAGE_KEYS.incidencias, getIncidencias, setIncidencias);
 export const useConversaciones = () =>
   useColeccion<Conversacion>(STORAGE_KEYS.conversaciones, getConversaciones, setConversaciones);
+
+/* ---------------- contenido editable de las landings ---------------- */
+
+export type TemporadaEditable = {
+  nombre: string;
+  meses: string;
+  precio: number;
+  minNoches: number;
+};
+
+export type ContenidoVilla = {
+  villa: VillaId;
+  nombre: string;
+  tagline: string;
+  descripcionTitulo: string;
+  descripcion: string;
+  habitaciones: number;
+  banos: number;
+  huespedesMax: number;
+  fichaExtra: string[];
+  temporadas: TemporadaEditable[];
+  limpiezaFinal: number;
+  fianza: number;
+  normas: string[];
+  cancelacion: string;
+  checkIn: string;
+  checkOut: string;
+};
+
+export const contenidoSeed: ContenidoVilla[] = [
+  {
+    villa: "azahar",
+    nombre: "Villa Azahar",
+    tagline: "Donde el aire huele a azahar",
+    descripcionTitulo:
+      "Hay casas que se visitan y casas que se recuerdan. Villa Azahar es de las segundas.",
+    descripcion:
+      "Un jardín de naranjos que perfuma cada mañana, una piscina que mira al mar y habitaciones pensadas para que el silencio también forme parte de las vacaciones.",
+    habitaciones: 4,
+    banos: 3,
+    huespedesMax: 8,
+    fichaExtra: [
+      "Piscina privada",
+      "Jardín de cítricos",
+      "Parking en la finca",
+      "8 min a pie de la playa",
+    ],
+    temporadas: [
+      { nombre: "Temporada baja", meses: "Noviembre – marzo", precio: 290, minNoches: 3 },
+      { nombre: "Media", meses: "Abril, mayo, octubre", precio: 410, minNoches: 4 },
+      { nombre: "Alta", meses: "Junio, septiembre", precio: 560, minNoches: 5 },
+      { nombre: "Muy alta", meses: "Julio y agosto", precio: 740, minNoches: 7 },
+    ],
+    limpiezaFinal: 140,
+    fianza: 500,
+    normas: [
+      "Silencio entre las 23:00 y las 8:00: los vecinos están muy cerca del jardín.",
+      "Mascotas bienvenidas; no pueden subir a las camas ni quedarse solas en casa.",
+      "Basura: contenedores al final del camino, orgánico en el marrón (martes y viernes).",
+      "No se admiten fiestas ni visitas que no estén en la reserva.",
+    ],
+    cancelacion:
+      "Cancelación gratuita hasta 30 días antes de la llegada, con devolución íntegra del anticipo. Entre 30 y 14 días, se devuelve el 50 %. En los últimos 14 días no hay devolución, pero intentamos reubicar tu estancia en otras fechas del mismo año.",
+    checkIn: "A partir de las 16:00",
+    checkOut: "Antes de las 11:00",
+  },
+  {
+    villa: "poniente",
+    nombre: "Villa Poniente",
+    tagline: "Un atardecer distinto cada noche",
+    descripcionTitulo:
+      "Villa Poniente no se enseña por la mañana. Se enseña a las ocho y media, cuando la luz se vuelve espesa y todo el mundo deja de hablar.",
+    descripcion:
+      "Una terraza volada sobre el pinar, una piscina que se tiñe de naranja durante media hora y dos habitaciones para dos personas que no necesitan más. Aquí no hay planes ni horarios: hay una hora concreta del día que lo justifica todo, y el resto del tiempo, silencio.",
+    habitaciones: 2,
+    banos: 2,
+    huespedesMax: 4,
+    fichaExtra: [
+      "Terraza al poniente",
+      "Piscina desbordante",
+      "Parking privado",
+      "6 min a pie a la cala",
+    ],
+    temporadas: [
+      { nombre: "Temporada baja", meses: "Noviembre – marzo", precio: 240, minNoches: 2 },
+      { nombre: "Media", meses: "Abril, mayo, octubre", precio: 330, minNoches: 3 },
+      { nombre: "Alta", meses: "Junio, septiembre", precio: 460, minNoches: 4 },
+      { nombre: "Muy alta", meses: "Julio y agosto", precio: 610, minNoches: 5 },
+    ],
+    limpiezaFinal: 95,
+    fianza: 350,
+    normas: [
+      "Silencio entre las 22:30 y las 8:00: la casa está en zona residencial tranquila.",
+      "La chimenea solo se usa de octubre a abril; leña en el porche lateral.",
+      "Basura: punto de recogida a 200 m, bajando a la derecha.",
+      "No se admiten mascotas ni eventos.",
+    ],
+    cancelacion:
+      "Cancelación gratuita hasta 21 días antes de la llegada. Entre 21 y 7 días, se retiene el 50 % del importe. En los últimos 7 días no hay devolución, salvo que podamos volver a alquilar las fechas.",
+    checkIn: "A partir de las 17:00",
+    checkOut: "Antes de las 11:00",
+  },
+  {
+    villa: "salobre",
+    nombre: "Villa Salobre",
+    tagline: "A un paso del mar, lejos de todo lo demás",
+    descripcionTitulo:
+      "Aquí la casa no compite con el paisaje: se deja ganar. Piedra seca, pino carrasco y una escalera que baja hasta el agua.",
+    descripcion:
+      "Villa Salobre está construida en el borde, donde el monte se rompe y empieza el azul. Se duerme con la ventana abierta y el ruido del mar contra las rocas, se come tarde en una mesa de catorce y se pasa el día descalzo. No hay vecinos, no hay cobertura en la cala y no hace ninguna falta.",
+    habitaciones: 6,
+    banos: 5,
+    huespedesMax: 12,
+    fichaExtra: [
+      "Acceso propio a cala",
+      "Pérgola con brasa",
+      "Parking para 4 coches",
+      "90 escalones al agua",
+    ],
+    temporadas: [
+      { nombre: "Temporada baja", meses: "Noviembre – marzo", precio: 380, minNoches: 3 },
+      { nombre: "Media", meses: "Abril, mayo, octubre", precio: 540, minNoches: 4 },
+      { nombre: "Alta", meses: "Junio, septiembre", precio: 720, minNoches: 5 },
+      { nombre: "Muy alta", meses: "Julio y agosto", precio: 980, minNoches: 7 },
+    ],
+    limpiezaFinal: 210,
+    fianza: 900,
+    normas: [
+      "La música en el exterior se apaga a las 23:00; dentro, sin límite razonable.",
+      "Los 90 escalones a la cala no tienen iluminación: llevad linterna al volver.",
+      "Basura: separad vidrio y envases; el contenedor está a 1 km, en el cruce.",
+      "Grupos sí, fiestas con invitados externos no.",
+    ],
+    cancelacion:
+      "Cancelación gratuita hasta 45 días antes de la llegada. Entre 45 y 21 días, se retiene el 30 %. A partir de 21 días, el importe no es reembolsable; en grupos grandes recomendamos contratar un seguro de cancelación.",
+    checkIn: "A partir de las 16:30",
+    checkOut: "Antes de las 10:30",
+  },
+];
+
+export const getContenidos = () =>
+  leer<ContenidoVilla>(STORAGE_KEYS.contenido, contenidoSeed);
+export const setContenidos = (v: ContenidoVilla[]) => {
+  escribir(STORAGE_KEYS.contenido, v);
+  notificar(STORAGE_KEYS.contenido);
+};
+
+/** Contenido de una villa concreta, con la semilla como respaldo. */
+export function getContenido(villa: VillaId): ContenidoVilla {
+  return (
+    getContenidos().find((c) => c.villa === villa) ??
+    contenidoSeed.find((c) => c.villa === villa)!
+  );
+}
+
+/** Guarda el contenido de una villa manteniendo el resto intacto. */
+export function guardarContenido(contenido: ContenidoVilla) {
+  const actuales = getContenidos();
+  setContenidos(
+    actuales.some((c) => c.villa === contenido.villa)
+      ? actuales.map((c) => (c.villa === contenido.villa ? contenido : c))
+      : [...actuales, contenido],
+  );
+}
+
+export const useContenidos = () =>
+  useColeccion<ContenidoVilla>(STORAGE_KEYS.contenido, getContenidos, setContenidos);
+
+/** Contenido reactivo de una villa; SSR-safe (primer render con la semilla). */
+export function useContenidoVilla(villa: VillaId): ContenidoVilla {
+  const [contenidos] = useContenidos();
+  return (
+    contenidos.find((c) => c.villa === villa) ??
+    contenidoSeed.find((c) => c.villa === villa)!
+  );
+}

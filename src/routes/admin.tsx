@@ -4,6 +4,7 @@ import { toast } from "sonner";
 import { LogOut, RotateCcw } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import { ContenidoWeb } from "@/components/admin/ContenidoWeb";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
@@ -53,6 +54,7 @@ const secciones = [
   { id: "incidencias", label: "Incidencias" },
   { id: "ingresos", label: "Ocupación e ingresos" },
   { id: "mensajes", label: "Mensajería" },
+  { id: "contenido", label: "Contenido web" },
 ] as const;
 
 type SeccionId = (typeof secciones)[number]["id"];
@@ -124,6 +126,7 @@ function Admin() {
         {seccion === "incidencias" && <Incidencias />}
         {seccion === "ingresos" && <Ingresos />}
         {seccion === "mensajes" && <Mensajeria />}
+        {seccion === "contenido" && <ContenidoWeb />}
       </main>
     </div>
   );

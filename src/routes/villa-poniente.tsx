@@ -17,6 +17,8 @@ import { toast } from "sonner";
 
 import { SiteHeader } from "@/components/site/SiteHeader";
 import { SiteFooter } from "@/components/site/SiteFooter";
+import { CondicionesCasa } from "@/components/site/CondicionesCasa";
+import { useContenidoVilla } from "@/lib/remansa-storage";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -55,15 +57,7 @@ export const Route = createFileRoute("/villa-poniente")({
   component: VillaPoniente,
 });
 
-const ficha = [
-  { icon: BedDouble, label: "2 habitaciones" },
-  { icon: Bath, label: "2 baños" },
-  { icon: Users, label: "Hasta 4 huéspedes" },
-  { icon: Sun, label: "Terraza al poniente" },
-  { icon: Waves, label: "Piscina desbordante" },
-  { icon: Car, label: "Parking privado" },
-  { icon: Footprints, label: "6 min a pie a la cala" },
-];
+const iconosFicha = [BedDouble, Bath, Users, Sun, Waves, Car, Footprints];
 
 const amenities = [
   { icon: Wifi, label: "Wifi de fibra", nota: "400 Mb, cobertura también en la terraza" },
@@ -82,12 +76,6 @@ const galeria = [
   { img: detailImg, espacio: "Detalle", pie: "Dos copas y nada más que hacer" },
 ];
 
-const temporadas = [
-  { nombre: "Temporada baja", meses: "Noviembre – marzo", precio: "240 €", min: "2 noches" },
-  { nombre: "Media", meses: "Abril, mayo, octubre", precio: "330 €", min: "3 noches" },
-  { nombre: "Alta", meses: "Junio, septiembre", precio: "460 €", min: "4 noches" },
-  { nombre: "Muy alta", meses: "Julio y agosto", precio: "610 €", min: "5 noches" },
-];
 
 const cerca = [
   {
@@ -135,6 +123,19 @@ const meses = [
 ];
 
 function VillaPoniente() {
+  const contenido = useContenidoVilla("poniente");
+  const ficha = useMemo(
+    () =>
+      [
+        `${contenido.habitaciones} habitaciones`,
+        `${contenido.banos} baños`,
+        `Hasta ${contenido.huespedesMax} huéspedes`,
+        ...contenido.fichaExtra,
+      ]
+        .filter(Boolean)
+        .map((label, i) => ({ label, Icon: iconosFicha[Math.min(i, iconosFicha.length - 1)]! })),
+    [contenido],
+  );
   const [mesActivo, setMesActivo] = useState(0);
   const mes = meses[mesActivo]!;
   const celdas = useMemo(
@@ -181,9 +182,9 @@ function VillaPoniente() {
             <span className="size-2 rounded-full bg-poniente" />
             <p className="eyebrow text-background/80">Remansa · Villa 02</p>
           </div>
-          <h1 className="display-xl reveal-up mt-6 text-background">Villa Poniente</h1>
+          <h1 className="display-xl reveal-up mt-6 text-background">{contenido.nombre}</h1>
           <p className="reveal-up mt-5 font-serif text-2xl italic text-background/90 md:text-3xl">
-            Un atardecer distinto cada noche
+            {contenido.tagline}
           </p>
           <div className="reveal-up mt-10 flex flex-wrap gap-4">
             <Button asChild variant="onImage" size="editorial">
@@ -200,14 +201,9 @@ function VillaPoniente() {
       <section className="mx-auto max-w-3xl px-6 py-28 md:py-36">
         <p className="eyebrow text-center">La casa</p>
         <p className="display-md mt-8 text-balance text-center leading-snug text-ink">
-          Villa Poniente no se enseña por la mañana. Se enseña a las ocho y media, cuando la luz se
-          vuelve espesa y todo el mundo deja de hablar.
+          {contenido.descripcionTitulo}
         </p>
-        <p className="lede mt-8 text-center">
-          Una terraza volada sobre el pinar, una piscina que se tiñe de naranja durante media hora y
-          dos habitaciones para dos personas que no necesitan más. Aquí no hay planes ni horarios:
-          hay una hora concreta del día que lo justifica todo, y el resto del tiempo, silencio.
-        </p>
+        <p className="lede mt-8 text-center">{contenido.descripcion}</p>
       </section>
 
       {/* Ficha práctica */}
@@ -217,7 +213,7 @@ function VillaPoniente() {
           <div className="mt-10 grid grid-cols-2 gap-x-8 gap-y-8 md:grid-cols-4 lg:grid-cols-7">
             {ficha.map((f) => (
               <div key={f.label} className="border-t border-border pt-5">
-                <f.icon className="size-5 text-olive" strokeWidth={1.25} />
+                <f.Icon className="size-5 text-olive" strokeWidth={1.25} />
                 <p className="mt-4 text-sm leading-snug text-foreground">{f.label}</p>
               </div>
             ))}
@@ -352,7 +348,7 @@ function VillaPoniente() {
             <p className="eyebrow">Precios por noche</p>
             <h2 className="display-lg mt-5 text-ink">Sin comisiones de portal</h2>
             <ul className="mt-9">
-              {temporadas.map((t) => (
+              {contenido.temporadas.map((t) => (
                 <li
                   key={t.nombre}
                   className="flex items-baseline justify-between gap-6 border-b border-border py-5"
@@ -360,20 +356,24 @@ function VillaPoniente() {
                   <div>
                     <p className="font-serif text-xl text-ink">{t.nombre}</p>
                     <p className="mt-1 text-xs uppercase tracking-[0.14em] text-muted-foreground">
-                      {t.meses} · mínimo {t.min}
+                      {t.meses} · mínimo {t.minNoches} noches
                     </p>
                   </div>
-                  <p className="whitespace-nowrap font-serif text-2xl text-sea">{t.precio}</p>
+                  <p className="whitespace-nowrap font-serif text-2xl text-sea">{t.precio} €</p>
                 </li>
               ))}
             </ul>
             <p className="mt-6 text-xs leading-relaxed text-muted-foreground">
-              Limpieza final 95 €. Ropa de cama y toallas incluidas. Fianza 350 € devuelta a las 48 h
-              de la salida. Escapadas de dos noches disponibles fuera de temporada alta.
+              Limpieza final {contenido.limpiezaFinal} €. Ropa de cama y toallas incluidas. Fianza{" "}
+              {contenido.fianza} € devuelta a las 48 h de la salida. Escapadas de dos noches
+              disponibles fuera de temporada alta.
             </p>
           </div>
         </div>
       </section>
+
+      <CondicionesCasa contenido={contenido} />
+
 
       {/* Reserva */}
       <section id="reservar" className="scroll-mt-24 surface-sand py-24 md:py-32">
