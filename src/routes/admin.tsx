@@ -1,13 +1,23 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
-import { LogOut } from "lucide-react";
+import { LogOut, RotateCcw } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 import { eur, villas, type VillaId } from "@/lib/remansa-data";
+import {
+  añadirMensaje,
+  restablecerDemo,
+  sembrarSiHaceFalta,
+  useBookings,
+  useConversaciones,
+  useIncidencias,
+  useLimpiezas,
+  type Booking,
+} from "@/lib/remansa-storage";
 
 export const Route = createFileRoute("/admin")({
   head: () => ({
@@ -30,85 +40,6 @@ export const Route = createFileRoute("/admin")({
 
 /* ---------------- datos de ejemplo ---------------- */
 
-type Estado = "confirmada" | "bloqueo" | "pendiente";
-
-type Booking = {
-  id: string;
-  villa: VillaId;
-  huesped: string;
-  desde: number; // día del mes (septiembre 2026)
-  hasta: number;
-  estado: Estado;
-  total: number;
-  canal: string;
-};
-
-const bookings: Booking[] = [
-  { id: "R-1041", villa: "azahar", huesped: "Lucía Ferrer", desde: 1, hasta: 8, estado: "confirmada", total: 2380, canal: "Directa" },
-  { id: "R-1052", villa: "azahar", huesped: "Familia Roig", desde: 12, hasta: 19, estado: "confirmada", total: 2660, canal: "Directa" },
-  { id: "B-0031", villa: "azahar", huesped: "Mantenimiento piscina", desde: 24, hasta: 26, estado: "bloqueo", total: 0, canal: "Bloqueo" },
-  { id: "R-1063", villa: "poniente", huesped: "Andrés y Clara", desde: 3, hasta: 9, estado: "confirmada", total: 1980, canal: "Directa" },
-  { id: "R-1070", villa: "poniente", huesped: "Marion Leclerc", desde: 14, hasta: 18, estado: "pendiente", total: 1320, canal: "Web" },
-  { id: "R-1074", villa: "poniente", huesped: "Pau i Berta", desde: 20, hasta: 27, estado: "confirmada", total: 2310, canal: "Directa" },
-  { id: "R-1088", villa: "salobre", huesped: "Grupo Nerea", desde: 2, hasta: 6, estado: "confirmada", total: 2160, canal: "Directa" },
-  { id: "B-0035", villa: "salobre", huesped: "Revisión escalera cala", desde: 9, hasta: 10, estado: "bloqueo", total: 0, canal: "Bloqueo" },
-  { id: "R-1093", villa: "salobre", huesped: "Cuadrilla Bilbao", desde: 11, hasta: 18, estado: "confirmada", total: 3780, canal: "Web" },
-  { id: "R-1099", villa: "salobre", huesped: "Reunión Casals", desde: 22, hasta: 28, estado: "pendiente", total: 3240, canal: "Web" },
-];
-
-type Limpieza = {
-  id: string;
-  villa: VillaId;
-  fecha: string;
-  franja: string;
-  equipo: string;
-  nota: string;
-  hecha: boolean;
-};
-
-const limpiezasIniciales: Limpieza[] = [
-  { id: "L-201", villa: "azahar", fecha: "8 sep", franja: "11:00 – 15:00", equipo: "Rosa y Amal", nota: "Salida de 6 huéspedes con perro. Aspirar sofás.", hecha: true },
-  { id: "L-202", villa: "poniente", fecha: "9 sep", franja: "11:30 – 14:00", equipo: "Rosa", nota: "Reponer leña y velas de la terraza.", hecha: true },
-  { id: "L-203", villa: "salobre", fecha: "6 sep", franja: "10:30 – 16:00", equipo: "Equipo completo", nota: "Grupo de 10. Limpieza de brasa y ducha exterior.", hecha: true },
-  { id: "L-204", villa: "azahar", fecha: "12 sep", franja: "11:00 – 15:00", equipo: "Rosa y Amal", nota: "Entrada familiar: cuna y trona montadas.", hecha: false },
-  { id: "L-205", villa: "salobre", fecha: "18 sep", franja: "10:30 – 16:00", equipo: "Equipo completo", nota: "Cambio entre dos grupos, margen ajustado.", hecha: false },
-  { id: "L-206", villa: "poniente", fecha: "18 sep", franja: "11:30 – 14:00", equipo: "Amal", nota: "Revisar filtro de la piscina desbordante.", hecha: false },
-  { id: "L-207", villa: "azahar", fecha: "19 sep", franja: "11:00 – 14:30", equipo: "Rosa", nota: "Salida sin entrada posterior: limpieza a fondo.", hecha: false },
-];
-
-type Incidencia = {
-  id: string;
-  villa: VillaId;
-  titulo: string;
-  fecha: string;
-  prioridad: "alta" | "media" | "baja";
-  estado: "abierta" | "en curso" | "resuelta";
-};
-
-const incidenciasIniciales: Incidencia[] = [
-  { id: "I-118", villa: "salobre", titulo: "Peldaño suelto en el acceso a la cala", fecha: "05 sep 2026", prioridad: "alta", estado: "en curso" },
-  { id: "I-119", villa: "azahar", titulo: "Persiana del dormitorio norte atascada", fecha: "07 sep 2026", prioridad: "media", estado: "abierta" },
-  { id: "I-120", villa: "poniente", titulo: "Luz sumergida de la piscina fundida", fecha: "08 sep 2026", prioridad: "media", estado: "abierta" },
-  { id: "I-115", villa: "azahar", titulo: "Riego por goteo del jardín de cítricos", fecha: "28 ago 2026", prioridad: "baja", estado: "resuelta" },
-  { id: "I-116", villa: "salobre", titulo: "Wifi inestable en el dormitorio 5", fecha: "30 ago 2026", prioridad: "media", estado: "resuelta" },
-];
-
-type Mensaje = {
-  id: string;
-  huesped: string;
-  villa: VillaId;
-  ultimo: string;
-  hora: string;
-  sinLeer: number;
-};
-
-const mensajes: Mensaje[] = [
-  { id: "M-1", huesped: "Lucía Ferrer", villa: "azahar", ultimo: "¿Podemos dejar las maletas después del check-out?", hora: "09:41", sinLeer: 2 },
-  { id: "M-2", huesped: "Andrés y Clara", villa: "poniente", ultimo: "Reservado en La Terraza del Faro, ¡gracias!", hora: "Ayer", sinLeer: 0 },
-  { id: "M-3", huesped: "Cuadrilla Bilbao", villa: "salobre", ultimo: "Somos 11 al final, ¿hay problema con la cama extra?", hora: "Ayer", sinLeer: 1 },
-  { id: "M-4", huesped: "Marion Leclerc", villa: "poniente", ultimo: "Bonjour, quelle est l'heure d'arrivée ?", hora: "Lun", sinLeer: 0 },
-  { id: "M-5", huesped: "Grupo Nerea", villa: "salobre", ultimo: "Todo perfecto, dejamos las llaves en la caja.", hora: "3 sep", sinLeer: 0 },
-];
 
 const ocupacion: { villa: VillaId; noches: number; disponibles: number; ingresos: number; adr: number }[] = [
   { villa: "azahar", noches: 22, disponibles: 30, ingresos: 8420, adr: 383 },
@@ -131,6 +62,10 @@ type SeccionId = (typeof secciones)[number]["id"];
 function Admin() {
   const [dentro, setDentro] = useState(false);
   const [seccion, setSeccion] = useState<SeccionId>("calendario");
+
+  useEffect(() => {
+    sembrarSiHaceFalta();
+  }, []);
 
   if (!dentro) return <Login onEntrar={() => setDentro(true)} />;
 
@@ -162,12 +97,24 @@ function Admin() {
               </button>
             ))}
           </nav>
-          <button
-            onClick={() => setDentro(false)}
-            className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.14em] text-muted-foreground hover:text-ink"
-          >
-            <LogOut className="h-3.5 w-3.5" /> Salir
-          </button>
+          <div className="flex items-center gap-5">
+            <button
+              onClick={() => {
+                restablecerDemo();
+                toast.success("Datos de demo restablecidos");
+              }}
+              className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.14em] text-muted-foreground hover:text-ink"
+              title="Borra el estado guardado en este navegador y vuelve a sembrar los datos originales"
+            >
+              <RotateCcw className="h-3.5 w-3.5" /> Restablecer datos de demo
+            </button>
+            <button
+              onClick={() => setDentro(false)}
+              className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.14em] text-muted-foreground hover:text-ink"
+            >
+              <LogOut className="h-3.5 w-3.5" /> Salir
+            </button>
+          </div>
         </div>
       </header>
 
@@ -225,7 +172,38 @@ const dias = Array.from({ length: 30 }, (_, i) => i + 1);
 
 function Calendario() {
   const [filtro, setFiltro] = useState<"todas" | VillaId>("todas");
+  const [bookings, setBookings] = useBookings();
   const lista = (Object.keys(villas) as VillaId[]).filter((v) => filtro === "todas" || v === filtro);
+
+  const crearBloqueo = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const datos = new FormData(e.currentTarget);
+    const villa = datos.get("villa") as VillaId;
+    const desde = Number(datos.get("desde"));
+    const hasta = Number(datos.get("hasta"));
+    const motivo = String(datos.get("motivo") || "").trim();
+
+    if (!villa || !motivo || !desde || !hasta || desde < 1 || hasta > 30 || hasta < desde) {
+      toast.error("Revisa los datos del bloqueo", {
+        description: "Los días deben estar entre 1 y 30 y la salida no puede ser anterior a la entrada.",
+      });
+      return;
+    }
+
+    const nuevo: Booking = {
+      id: `B-${Date.now().toString().slice(-4)}`,
+      villa,
+      huesped: motivo,
+      desde,
+      hasta,
+      estado: "bloqueo",
+      total: 0,
+      canal: "Bloqueo",
+    };
+    setBookings([...bookings, nuevo]);
+    toast.success("Bloqueo añadido al calendario");
+    e.currentTarget.reset();
+  };
 
   return (
     <section>
@@ -315,6 +293,42 @@ function Calendario() {
         </span>
       </div>
 
+      <form
+        onSubmit={crearBloqueo}
+        className="mt-10 grid gap-4 border border-border bg-card p-6 md:grid-cols-[1fr_100px_100px_1.4fr_auto] md:items-end"
+      >
+        <div>
+          <Label htmlFor="bl-villa" className="eyebrow">Villa</Label>
+          <select
+            id="bl-villa"
+            name="villa"
+            defaultValue="azahar"
+            className="mt-2 h-10 w-full border border-border bg-background px-3 text-sm text-ink"
+          >
+            {(Object.keys(villas) as VillaId[]).map((v) => (
+              <option key={v} value={v}>
+                {villas[v].name}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div>
+          <Label htmlFor="bl-desde" className="eyebrow">Del día</Label>
+          <Input id="bl-desde" name="desde" type="number" min={1} max={30} defaultValue={1} className="mt-2" />
+        </div>
+        <div>
+          <Label htmlFor="bl-hasta" className="eyebrow">Al día</Label>
+          <Input id="bl-hasta" name="hasta" type="number" min={1} max={30} defaultValue={2} className="mt-2" />
+        </div>
+        <div>
+          <Label htmlFor="bl-motivo" className="eyebrow">Motivo del bloqueo</Label>
+          <Input id="bl-motivo" name="motivo" placeholder="Mantenimiento de la piscina" className="mt-2" required />
+        </div>
+        <Button type="submit">Añadir bloqueo</Button>
+      </form>
+
+
+
       <div className="mt-10 overflow-x-auto border border-border bg-card">
         <table className="w-full text-sm">
           <thead>
@@ -396,7 +410,7 @@ function Encabezado({ titulo, sub }: { titulo: string; sub: string }) {
 /* ---------------- limpiezas ---------------- */
 
 function Limpiezas() {
-  const [items, setItems] = useState(limpiezasIniciales);
+  const [items, setItems] = useLimpiezas();
   const pendientes = items.filter((i) => !i.hecha).length;
 
   const alternar = (id: string) => {
@@ -457,7 +471,7 @@ function Limpiezas() {
 /* ---------------- incidencias ---------------- */
 
 function Incidencias() {
-  const [items, setItems] = useState(incidenciasIniciales);
+  const [items, setItems] = useIncidencias();
   const [filtro, setFiltro] = useState<"todas" | VillaId>("todas");
   const visibles = items.filter((i) => filtro === "todas" || i.villa === filtro);
 
@@ -632,8 +646,33 @@ function Ingresos() {
 /* ---------------- mensajería ---------------- */
 
 function Mensajeria() {
-  const [activo, setActivo] = useState(mensajes[0]!.id);
-  const conv = mensajes.find((m) => m.id === activo)!;
+  const [conversaciones, setConversaciones] = useConversaciones();
+  const [activo, setActivo] = useState<string | null>(null);
+  const conv = conversaciones.find((m) => m.id === activo) ?? conversaciones[0];
+
+  const marcarLeida = (id: string) => {
+    setActivo(id);
+    setConversaciones((prev) => prev.map((c) => (c.id === id ? { ...c, sinLeer: 0 } : c)));
+  };
+
+  const responder = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!conv) return;
+    const form = e.currentTarget;
+    const texto = String(new FormData(form).get("respuesta") || "").trim();
+    if (!texto) return;
+    añadirMensaje({ huesped: conv.huesped, villa: conv.villa, de: "host", texto });
+    toast.success("Respuesta enviada (demo)");
+    form.reset();
+  };
+
+  if (!conv) {
+    return (
+      <section>
+        <Encabezado titulo="Mensajería" sub="Todavía no hay conversaciones guardadas." />
+      </section>
+    );
+  }
 
   return (
     <section>
@@ -643,38 +682,41 @@ function Mensajeria() {
       />
       <div className="mt-8 grid gap-6 lg:grid-cols-[360px_1fr]">
         <ul className="divide-y divide-border border border-border bg-card">
-          {mensajes.map((m) => (
-            <li key={m.id}>
-              <button
-                onClick={() => setActivo(m.id)}
-                className={cn(
-                  "w-full px-5 py-4 text-left transition-colors",
-                  activo === m.id ? "bg-sand" : "hover:bg-sand/60",
-                )}
-              >
-                <div className="flex items-center justify-between gap-3">
-                  <p className="text-sm text-ink">{m.huesped}</p>
-                  <span className="text-xs text-muted-foreground">{m.hora}</span>
-                </div>
-                <p className="mt-1 truncate text-xs text-muted-foreground">{m.ultimo}</p>
-                <div className="mt-2 flex items-center gap-2">
-                  <span
-                    className="h-2 w-2"
-                    style={{ backgroundColor: villas[m.villa].accentVar }}
-                    aria-hidden
-                  />
-                  <span className="text-[0.65rem] uppercase tracking-[0.14em] text-muted-foreground">
-                    {villas[m.villa].name}
-                  </span>
-                  {m.sinLeer > 0 && (
-                    <span className="ml-auto bg-ink px-2 py-0.5 text-[0.6rem] text-background">
-                      {m.sinLeer}
-                    </span>
+          {conversaciones.map((m) => {
+            const ultimo = m.mensajes[m.mensajes.length - 1];
+            return (
+              <li key={m.id}>
+                <button
+                  onClick={() => marcarLeida(m.id)}
+                  className={cn(
+                    "w-full px-5 py-4 text-left transition-colors",
+                    conv.id === m.id ? "bg-sand" : "hover:bg-sand/60",
                   )}
-                </div>
-              </button>
-            </li>
-          ))}
+                >
+                  <div className="flex items-center justify-between gap-3">
+                    <p className="text-sm text-ink">{m.huesped}</p>
+                    <span className="text-xs text-muted-foreground">{ultimo?.hora}</span>
+                  </div>
+                  <p className="mt-1 truncate text-xs text-muted-foreground">{ultimo?.texto}</p>
+                  <div className="mt-2 flex items-center gap-2">
+                    <span
+                      className="h-2 w-2"
+                      style={{ backgroundColor: villas[m.villa].accentVar }}
+                      aria-hidden
+                    />
+                    <span className="text-[0.65rem] uppercase tracking-[0.14em] text-muted-foreground">
+                      {villas[m.villa].name}
+                    </span>
+                    {m.sinLeer > 0 && (
+                      <span className="ml-auto bg-ink px-2 py-0.5 text-[0.6rem] text-background">
+                        {m.sinLeer}
+                      </span>
+                    )}
+                  </div>
+                </button>
+              </li>
+            );
+          })}
         </ul>
 
         <div className="flex flex-col border border-border bg-card">
@@ -683,19 +725,13 @@ function Mensajeria() {
             <p className="text-xs text-muted-foreground">{villas[conv.villa].name}</p>
           </div>
           <div className="flex-1 space-y-4 px-6 py-6">
-            <Burbuja quien="huesped">{conv.ultimo}</Burbuja>
-            <Burbuja quien="host">
-              Hola, ahora mismo lo miro y te confirmo en un momento. Gracias por avisar.
-            </Burbuja>
+            {conv.mensajes.map((m) => (
+              <Burbuja key={m.id} quien={m.de}>
+                {m.texto}
+              </Burbuja>
+            ))}
           </div>
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              toast.success("Respuesta enviada (demo)");
-              (e.target as HTMLFormElement).reset();
-            }}
-            className="flex gap-3 border-t border-border p-4"
-          >
+          <form onSubmit={responder} className="flex gap-3 border-t border-border p-4">
             <Input name="respuesta" placeholder="Escribe una respuesta…" required />
             <Button type="submit">Enviar</Button>
           </form>

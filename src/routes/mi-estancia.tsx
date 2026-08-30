@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { añadirMensaje, sembrarSiHaceFalta } from "@/lib/remansa-storage";
 import {
   ArrowLeft,
   CalendarDays,
@@ -52,6 +53,11 @@ export const Route = createFileRoute("/mi-estancia")({
 function MiEstancia() {
   const [codigo, setCodigo] = useState("");
   const [reserva, setReserva] = useState<Reserva | null>(null);
+
+  useEffect(() => {
+    sembrarSiHaceFalta();
+  }, []);
+
 
   const entrar = (e: React.FormEvent) => {
     e.preventDefault();
@@ -146,12 +152,24 @@ function Estancia({ reserva, onSalir }: { reserva: Reserva; onSalir: () => void 
     (new Date(reserva.salida).getTime() - new Date(reserva.llegada).getTime()) / 86400000,
   );
 
-  const enviarMensaje = (e: React.FormEvent) => {
+  const enviarMensaje = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const form = e.currentTarget;
+    const datos = new FormData(form);
+    const asunto = String(datos.get("asunto") || "").trim();
+    const mensaje = String(datos.get("mensaje") || "").trim();
+
+    añadirMensaje({
+      huesped: reserva.huesped,
+      villa: reserva.villa,
+      de: "huesped",
+      texto: asunto ? `${asunto}: ${mensaje}` : mensaje,
+    });
+
     toast.success("Mensaje enviado a Marta", {
       description: "Te responderá en menos de una hora (demo, no se envía nada real).",
     });
-    (e.target as HTMLFormElement).reset();
+    form.reset();
   };
 
   return (
