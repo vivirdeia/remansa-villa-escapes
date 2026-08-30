@@ -266,7 +266,7 @@
 }
 
 .remansa-tiles {
-  filter: saturate(0.62) contrast(0.94) brightness(1.04) sepia(0.16);
+  filter: grayscale(0.42) saturate(0.72) brightness(1.06) contrast(0.92) sepia(0.22);
 }
 
 .remansa-pin-wrap {
