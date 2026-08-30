@@ -212,7 +212,9 @@ function subscribe(key: StorageKey, fn: Listener) {
   const set = listeners.get(key) ?? new Set<Listener>();
   set.add(fn);
   listeners.set(key, set);
-  return () => set.delete(fn);
+  return () => {
+    set.delete(fn);
+  };
 }
 
 function notificar(key: StorageKey) {
