@@ -11,6 +11,8 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as VillaAzaharRouteImport } from './routes/villa-azahar'
+import { Route as VillaPonienteRouteImport } from './routes/villa-poniente'
+import { Route as VillaSalobreRouteImport } from './routes/villa-salobre'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -22,31 +24,49 @@ const VillaAzaharRoute = VillaAzaharRouteImport.update({
   path: '/villa-azahar',
   getParentRoute: () => rootRouteImport,
 } as any)
+const VillaPonienteRoute = VillaPonienteRouteImport.update({
+  id: '/villa-poniente',
+  path: '/villa-poniente',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const VillaSalobreRoute = VillaSalobreRouteImport.update({
+  id: '/villa-salobre',
+  path: '/villa-salobre',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/villa-azahar': typeof VillaAzaharRoute
+  '/villa-poniente': typeof VillaPonienteRoute
+  '/villa-salobre': typeof VillaSalobreRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/villa-azahar': typeof VillaAzaharRoute
+  '/villa-poniente': typeof VillaPonienteRoute
+  '/villa-salobre': typeof VillaSalobreRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/villa-azahar': typeof VillaAzaharRoute
+  '/villa-poniente': typeof VillaPonienteRoute
+  '/villa-salobre': typeof VillaSalobreRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/villa-azahar'
+  fullPaths: '/' | '/villa-azahar' | '/villa-poniente' | '/villa-salobre'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/villa-azahar'
-  id: '__root__' | '/' | '/villa-azahar'
+  to: '/' | '/villa-azahar' | '/villa-poniente' | '/villa-salobre'
+  id: '__root__' | '/' | '/villa-azahar' | '/villa-poniente' | '/villa-salobre'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   VillaAzaharRoute: typeof VillaAzaharRoute
+  VillaPonienteRoute: typeof VillaPonienteRoute
+  VillaSalobreRoute: typeof VillaSalobreRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -65,12 +85,28 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof VillaAzaharRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/villa-poniente': {
+      id: '/villa-poniente'
+      path: '/villa-poniente'
+      fullPath: '/villa-poniente'
+      preLoaderRoute: typeof VillaPonienteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/villa-salobre': {
+      id: '/villa-salobre'
+      path: '/villa-salobre'
+      fullPath: '/villa-salobre'
+      preLoaderRoute: typeof VillaSalobreRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   VillaAzaharRoute: VillaAzaharRoute,
+  VillaPonienteRoute: VillaPonienteRoute,
+  VillaSalobreRoute: VillaSalobreRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
