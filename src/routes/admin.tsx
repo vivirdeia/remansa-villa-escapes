@@ -366,16 +366,18 @@ function Calendario() {
 
 
       <div className="mt-10 overflow-x-auto border border-border bg-card">
-        <table className="w-full min-w-[760px] text-sm">
+        <table className="w-full min-w-[900px] text-sm">
           <thead>
             <tr className="border-b border-border text-left text-[0.65rem] uppercase tracking-[0.16em] text-muted-foreground">
               <th className="px-4 py-3">Ref.</th>
               <th className="px-4 py-3">Villa</th>
               <th className="px-4 py-3">Huésped</th>
               <th className="px-4 py-3">Fechas</th>
+              <th className="px-4 py-3">Código</th>
               <th className="px-4 py-3">Canal</th>
               <th className="px-4 py-3">Estado</th>
               <th className="px-4 py-3 text-right">Importe</th>
+              <th className="px-4 py-3 text-right">Acciones</th>
             </tr>
           </thead>
           <tbody>
@@ -385,18 +387,43 @@ function Calendario() {
                 <td className="px-4 py-3">{villas[b.villa].name}</td>
                 <td className="px-4 py-3 text-ink">{b.huesped}</td>
                 <td className="px-4 py-3 text-muted-foreground">
-                  {b.desde}–{b.hasta} sep
+                  {b.llegada && b.salida
+                    ? `${fechaCorta(b.llegada)} – ${fechaCorta(b.salida)}`
+                    : `${b.desde}–${b.hasta} sep`}
+                </td>
+                <td className="px-4 py-3 font-mono text-xs text-muted-foreground">
+                  {b.codigo ?? "—"}
                 </td>
                 <td className="px-4 py-3 text-muted-foreground">{b.canal}</td>
                 <td className="px-4 py-3">
                   <Pill estado={b.estado} />
                 </td>
                 <td className="px-4 py-3 text-right">{b.total ? eur(b.total) : "—"}</td>
+                <td className="px-4 py-3 text-right">
+                  {b.estado === "pendiente" ? (
+                    <button
+                      onClick={() => {
+                        setBookings(
+                          bookings.map((x) =>
+                            x.id === b.id ? { ...x, estado: "confirmada" as const } : x,
+                          ),
+                        );
+                        toast.success(`Reserva ${b.id} confirmada`);
+                      }}
+                      className="h-9 border border-ink px-3 text-[0.65rem] uppercase tracking-[0.14em] text-ink transition-colors hover:bg-ink hover:text-background"
+                    >
+                      Confirmar
+                    </button>
+                  ) : (
+                    <span className="text-xs text-muted-foreground">—</span>
+                  )}
+                </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
+
     </section>
   );
 }
