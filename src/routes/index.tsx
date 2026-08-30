@@ -1,5 +1,9 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { ClientOnly, createFileRoute, Link } from "@tanstack/react-router";
+import { lazy, Suspense } from "react";
 import { Compass, HandHeart, KeyRound, Leaf } from "lucide-react";
+
+const VillasMap = lazy(() => import("@/components/site/VillasMap"));
+
 
 import { SiteHeader } from "@/components/site/SiteHeader";
 import { SiteFooter } from "@/components/site/SiteFooter";
