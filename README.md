@@ -12,6 +12,7 @@ Caso de uso desarrollado por **Isaac Wesley** para **Vivir de IA**.
 Todo el estado dinámico persiste en `localStorage` a través de `src/lib/remansa-storage.ts`, sin backend:
 
 - **Reservas y bloqueos** del calendario multi-propiedad
+- **Solicitudes de reserva desde las landings**: el formulario crea una reserva real con estado *pendiente*, genera un código de acceso único (`AZAHAR-2026-K7QP`) y el propietario la confirma desde el calendario del backoffice
 - **Limpiezas** (pendiente / completada)
 - **Incidencias** de mantenimiento (abierta / en curso / resuelta)
 - **Mensajería** compartida entre el portal del huésped y el backoffice
@@ -21,7 +22,8 @@ La primera carga siembra automáticamente los datos iniciales. A partir de ahí,
 
 ### Simulado
 - **Login del backoffice**: acepta cualquier credencial, no hay autenticación real
-- **Formulario de reserva y pago**: no procesa cobros ni pasarela
+- **Cobros**: no hay pasarela de pago; la reserva es una solicitud sin cargo
+
 - **Acceso al portal del huésped**: por código de reserva (p. ej. `AZAHAR-2026`), sin cuentas ni contraseñas
 - **Mensajería**: no envía correos ni WhatsApp reales
 
