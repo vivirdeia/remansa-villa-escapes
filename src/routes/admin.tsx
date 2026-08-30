@@ -646,8 +646,33 @@ function Ingresos() {
 /* ---------------- mensajería ---------------- */
 
 function Mensajeria() {
-  const [activo, setActivo] = useState(mensajes[0]!.id);
-  const conv = mensajes.find((m) => m.id === activo)!;
+  const [conversaciones, setConversaciones] = useConversaciones();
+  const [activo, setActivo] = useState<string | null>(null);
+  const conv = conversaciones.find((m) => m.id === activo) ?? conversaciones[0];
+
+  const marcarLeida = (id: string) => {
+    setActivo(id);
+    setConversaciones((prev) => prev.map((c) => (c.id === id ? { ...c, sinLeer: 0 } : c)));
+  };
+
+  const responder = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!conv) return;
+    const form = e.currentTarget;
+    const texto = String(new FormData(form).get("respuesta") || "").trim();
+    if (!texto) return;
+    añadirMensaje({ huesped: conv.huesped, villa: conv.villa, de: "host", texto });
+    toast.success("Respuesta enviada (demo)");
+    form.reset();
+  };
+
+  if (!conv) {
+    return (
+      <section>
+        <Encabezado titulo="Mensajería" sub="Todavía no hay conversaciones guardadas." />
+      </section>
+    );
+  }
 
   return (
     <section>
@@ -657,38 +682,41 @@ function Mensajeria() {
       />
       <div className="mt-8 grid gap-6 lg:grid-cols-[360px_1fr]">
         <ul className="divide-y divide-border border border-border bg-card">
-          {mensajes.map((m) => (
-            <li key={m.id}>
-              <button
-                onClick={() => setActivo(m.id)}
-                className={cn(
-                  "w-full px-5 py-4 text-left transition-colors",
-                  activo === m.id ? "bg-sand" : "hover:bg-sand/60",
-                )}
-              >
-                <div className="flex items-center justify-between gap-3">
-                  <p className="text-sm text-ink">{m.huesped}</p>
-                  <span className="text-xs text-muted-foreground">{m.hora}</span>
-                </div>
-                <p className="mt-1 truncate text-xs text-muted-foreground">{m.ultimo}</p>
-                <div className="mt-2 flex items-center gap-2">
-                  <span
-                    className="h-2 w-2"
-                    style={{ backgroundColor: villas[m.villa].accentVar }}
-                    aria-hidden
-                  />
-                  <span className="text-[0.65rem] uppercase tracking-[0.14em] text-muted-foreground">
-                    {villas[m.villa].name}
-                  </span>
-                  {m.sinLeer > 0 && (
-                    <span className="ml-auto bg-ink px-2 py-0.5 text-[0.6rem] text-background">
-                      {m.sinLeer}
-                    </span>
+          {conversaciones.map((m) => {
+            const ultimo = m.mensajes[m.mensajes.length - 1];
+            return (
+              <li key={m.id}>
+                <button
+                  onClick={() => marcarLeida(m.id)}
+                  className={cn(
+                    "w-full px-5 py-4 text-left transition-colors",
+                    conv.id === m.id ? "bg-sand" : "hover:bg-sand/60",
                   )}
-                </div>
-              </button>
-            </li>
-          ))}
+                >
+                  <div className="flex items-center justify-between gap-3">
+                    <p className="text-sm text-ink">{m.huesped}</p>
+                    <span className="text-xs text-muted-foreground">{ultimo?.hora}</span>
+                  </div>
+                  <p className="mt-1 truncate text-xs text-muted-foreground">{ultimo?.texto}</p>
+                  <div className="mt-2 flex items-center gap-2">
+                    <span
+                      className="h-2 w-2"
+                      style={{ backgroundColor: villas[m.villa].accentVar }}
+                      aria-hidden
+                    />
+                    <span className="text-[0.65rem] uppercase tracking-[0.14em] text-muted-foreground">
+                      {villas[m.villa].name}
+                    </span>
+                    {m.sinLeer > 0 && (
+                      <span className="ml-auto bg-ink px-2 py-0.5 text-[0.6rem] text-background">
+                        {m.sinLeer}
+                      </span>
+                    )}
+                  </div>
+                </button>
+              </li>
+            );
+          })}
         </ul>
 
         <div className="flex flex-col border border-border bg-card">
@@ -697,19 +725,13 @@ function Mensajeria() {
             <p className="text-xs text-muted-foreground">{villas[conv.villa].name}</p>
           </div>
           <div className="flex-1 space-y-4 px-6 py-6">
-            <Burbuja quien="huesped">{conv.ultimo}</Burbuja>
-            <Burbuja quien="host">
-              Hola, ahora mismo lo miro y te confirmo en un momento. Gracias por avisar.
-            </Burbuja>
+            {conv.mensajes.map((m) => (
+              <Burbuja key={m.id} quien={m.de}>
+                {m.texto}
+              </Burbuja>
+            ))}
           </div>
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              toast.success("Respuesta enviada (demo)");
-              (e.target as HTMLFormElement).reset();
-            }}
-            className="flex gap-3 border-t border-border p-4"
-          >
+          <form onSubmit={responder} className="flex gap-3 border-t border-border p-4">
             <Input name="respuesta" placeholder="Escribe una respuesta…" required />
             <Button type="submit">Enviar</Button>
           </form>
