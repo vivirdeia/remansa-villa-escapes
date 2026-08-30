@@ -201,14 +201,9 @@ function VillaPoniente() {
       <section className="mx-auto max-w-3xl px-6 py-28 md:py-36">
         <p className="eyebrow text-center">La casa</p>
         <p className="display-md mt-8 text-balance text-center leading-snug text-ink">
-          Villa Poniente no se enseña por la mañana. Se enseña a las ocho y media, cuando la luz se
-          vuelve espesa y todo el mundo deja de hablar.
+          {contenido.descripcionTitulo}
         </p>
-        <p className="lede mt-8 text-center">
-          Una terraza volada sobre el pinar, una piscina que se tiñe de naranja durante media hora y
-          dos habitaciones para dos personas que no necesitan más. Aquí no hay planes ni horarios:
-          hay una hora concreta del día que lo justifica todo, y el resto del tiempo, silencio.
-        </p>
+        <p className="lede mt-8 text-center">{contenido.descripcion}</p>
       </section>
 
       {/* Ficha práctica */}
@@ -218,7 +213,7 @@ function VillaPoniente() {
           <div className="mt-10 grid grid-cols-2 gap-x-8 gap-y-8 md:grid-cols-4 lg:grid-cols-7">
             {ficha.map((f) => (
               <div key={f.label} className="border-t border-border pt-5">
-                <f.icon className="size-5 text-olive" strokeWidth={1.25} />
+                <f.Icon className="size-5 text-olive" strokeWidth={1.25} />
                 <p className="mt-4 text-sm leading-snug text-foreground">{f.label}</p>
               </div>
             ))}
