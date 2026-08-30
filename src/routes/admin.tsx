@@ -63,6 +63,10 @@ function Admin() {
   const [dentro, setDentro] = useState(false);
   const [seccion, setSeccion] = useState<SeccionId>("calendario");
 
+  useEffect(() => {
+    sembrarSiHaceFalta();
+  }, []);
+
   if (!dentro) return <Login onEntrar={() => setDentro(true)} />;
 
   return (
