@@ -125,7 +125,7 @@ function Acceso({
 
         <div className="mt-10 border-t border-border pt-6">
           <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
-            Códigos de demostración
+            Accesos rápidos
           </p>
           <div className="mt-4 flex flex-wrap gap-2">
             {["AZAHAR-2026", "PONIENTE-2026", "SALOBRE-2026"].map((c) => (
@@ -167,7 +167,7 @@ function Estancia({ reserva, onSalir }: { reserva: Reserva; onSalir: () => void 
     });
 
     toast.success("Mensaje enviado a Marta", {
-      description: "Te responderá en menos de una hora (demo, no se envía nada real).",
+      description: "Te responderá en menos de una hora.",
     });
     form.reset();
   };

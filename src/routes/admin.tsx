@@ -39,7 +39,7 @@ export const Route = createFileRoute("/admin")({
   component: Admin,
 });
 
-/* ---------------- datos de ejemplo ---------------- */
+/* ---------------- indicadores ---------------- */
 
 
 const ocupacion: { villa: VillaId; noches: number; disponibles: number; ingresos: number; adr: number }[] = [
@@ -74,53 +74,85 @@ function Admin() {
   return (
     <div className="min-h-screen bg-background">
       <header className="sticky top-0 z-40 border-b border-border bg-background/95 backdrop-blur">
-        <div className="mx-auto flex max-w-[1500px] flex-wrap items-center justify-between gap-4 px-6 py-4">
-          <div className="flex items-baseline gap-4">
-            <Link to="/" className="font-serif text-xl tracking-[0.22em] uppercase text-ink">
-              Remansa
-            </Link>
-            <span className="text-[0.65rem] uppercase tracking-[0.2em] text-muted-foreground">
-              Backoffice
-            </span>
-          </div>
-          <nav className="flex flex-wrap gap-1">
-            {secciones.map((s) => (
+        <div className="mx-auto max-w-[1500px] px-4 py-3 sm:px-6 sm:py-4">
+          <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 lg:flex lg:flex-wrap lg:justify-between">
+            <div className="flex min-w-0 items-baseline gap-3">
+              <Link to="/" className="font-serif text-lg tracking-[0.22em] uppercase text-ink sm:text-xl">
+                Remansa
+              </Link>
+              <span className="truncate text-[0.65rem] uppercase tracking-[0.2em] text-muted-foreground">
+                Backoffice
+              </span>
+            </div>
+
+            <nav className="hidden lg:order-2 lg:flex lg:flex-wrap lg:gap-1">
+              {secciones.map((s) => (
+                <button
+                  key={s.id}
+                  onClick={() => setSeccion(s.id)}
+                  className={cn(
+                    "px-3 py-2 text-xs uppercase tracking-[0.14em] transition-colors",
+                    seccion === s.id
+                      ? "bg-ink text-background"
+                      : "text-muted-foreground hover:text-ink",
+                  )}
+                >
+                  {s.label}
+                </button>
+              ))}
+            </nav>
+
+            <div className="flex shrink-0 items-center gap-1 sm:gap-3 lg:order-3">
               <button
-                key={s.id}
-                onClick={() => setSeccion(s.id)}
-                className={cn(
-                  "px-3 py-2 text-xs uppercase tracking-[0.14em] transition-colors",
-                  seccion === s.id
-                    ? "bg-ink text-background"
-                    : "text-muted-foreground hover:text-ink",
-                )}
+                onClick={() => {
+                  restablecerDemo();
+                  toast.success("Datos restablecidos");
+                }}
+                className="inline-flex h-11 items-center gap-2 px-2 text-xs uppercase tracking-[0.14em] text-muted-foreground hover:text-ink"
+                title="Borra el estado guardado en este navegador y vuelve a cargar los datos originales"
               >
-                {s.label}
+                <RotateCcw className="h-4 w-4 shrink-0" />
+                <span className="hidden sm:inline">Restablecer datos</span>
+                <span className="sr-only sm:hidden">Restablecer datos</span>
               </button>
-            ))}
-          </nav>
-          <div className="flex items-center gap-5">
-            <button
-              onClick={() => {
-                restablecerDemo();
-                toast.success("Datos de demo restablecidos");
-              }}
-              className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.14em] text-muted-foreground hover:text-ink"
-              title="Borra el estado guardado en este navegador y vuelve a sembrar los datos originales"
-            >
-              <RotateCcw className="h-3.5 w-3.5" /> Restablecer datos de demo
-            </button>
-            <button
-              onClick={() => setDentro(false)}
-              className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.14em] text-muted-foreground hover:text-ink"
-            >
-              <LogOut className="h-3.5 w-3.5" /> Salir
-            </button>
+              <button
+                onClick={() => setDentro(false)}
+                className="inline-flex h-11 items-center gap-2 px-2 text-xs uppercase tracking-[0.14em] text-muted-foreground hover:text-ink"
+              >
+                <LogOut className="h-4 w-4 shrink-0" />
+                <span className="hidden sm:inline">Salir</span>
+                <span className="sr-only sm:hidden">Salir</span>
+              </button>
+            </div>
           </div>
+
+          {/* Navegación mobile: pestañas con scroll horizontal */}
+          <nav
+            aria-label="Secciones del backoffice"
+            className="-mx-4 mt-3 overflow-x-auto px-4 lg:hidden [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          >
+            <div className="flex w-max gap-1 pb-1">
+              {secciones.map((s) => (
+                <button
+                  key={s.id}
+                  onClick={() => setSeccion(s.id)}
+                  aria-current={seccion === s.id ? "page" : undefined}
+                  className={cn(
+                    "h-11 shrink-0 border px-4 text-xs whitespace-nowrap uppercase tracking-[0.14em] transition-colors",
+                    seccion === s.id
+                      ? "border-ink bg-ink text-background"
+                      : "border-border text-muted-foreground",
+                  )}
+                >
+                  {s.label}
+                </button>
+              ))}
+            </div>
+          </nav>
         </div>
       </header>
 
-      <main className="mx-auto max-w-[1500px] px-6 py-10">
+      <main className="mx-auto max-w-[1500px] px-4 py-8 sm:px-6 sm:py-10">
         {seccion === "calendario" && <Calendario />}
         {seccion === "limpiezas" && <Limpiezas />}
         {seccion === "incidencias" && <Incidencias />}
@@ -139,7 +171,7 @@ function Login({ onEntrar }: { onEntrar: () => void }) {
         onSubmit={(e) => {
           e.preventDefault();
           onEntrar();
-          toast.success("Sesión iniciada (demo)");
+          toast.success("Sesión iniciada");
         }}
         className="w-full max-w-sm border border-border bg-card p-10"
       >
@@ -151,17 +183,17 @@ function Login({ onEntrar }: { onEntrar: () => void }) {
         <div className="mt-8 space-y-4">
           <div>
             <Label htmlFor="user">Usuario</Label>
-            <Input id="user" defaultValue="marta@remansa.es" className="mt-2" />
+            <Input id="user" defaultValue="marta@remansa.es" className="mt-2 h-11" />
           </div>
           <div>
             <Label htmlFor="pass">Contraseña</Label>
-            <Input id="pass" type="password" defaultValue="demo1234" className="mt-2" />
+            <Input id="pass" type="password" defaultValue="remansa2026" className="mt-2 h-11" />
           </div>
           <Button type="submit" className="w-full">
             Entrar
           </Button>
           <p className="text-xs text-muted-foreground">
-            Acceso simulado: cualquier credencial es válida en esta demo.
+            Acceso restringido al equipo de Remansa.
           </p>
         </div>
       </form>
@@ -221,7 +253,7 @@ function Calendario() {
             key={f}
             onClick={() => setFiltro(f)}
             className={cn(
-              "border px-3 py-2 text-xs uppercase tracking-[0.14em] transition-colors",
+              "h-11 border px-4 text-xs uppercase tracking-[0.14em] transition-colors",
               filtro === f ? "border-ink bg-ink text-background" : "border-border text-muted-foreground hover:text-ink",
             )}
           >
@@ -232,7 +264,7 @@ function Calendario() {
 
       <div className="mt-8 overflow-x-auto border border-border bg-card">
         <div className="min-w-[900px]">
-          <div className="grid grid-cols-[180px_1fr] border-b border-border">
+          <div className="grid grid-cols-[140px_1fr] sm:grid-cols-[180px_1fr] border-b border-border">
             <div className="px-4 py-3 text-[0.65rem] uppercase tracking-[0.16em] text-muted-foreground">
               Villa
             </div>
@@ -249,7 +281,7 @@ function Calendario() {
           </div>
 
           {lista.map((v) => (
-            <div key={v} className="grid grid-cols-[180px_1fr] border-b border-border last:border-b-0">
+            <div key={v} className="grid grid-cols-[140px_1fr] sm:grid-cols-[180px_1fr] border-b border-border last:border-b-0">
               <div className="px-4 py-5">
                 <p className="text-sm text-ink">{villas[v].name}</p>
                 <p className="text-xs text-muted-foreground">Hasta {villas[v].huespedesMax} pax</p>
@@ -306,7 +338,7 @@ function Calendario() {
             id="bl-villa"
             name="villa"
             defaultValue="azahar"
-            className="mt-2 h-10 w-full border border-border bg-background px-3 text-sm text-ink"
+            className="mt-2 h-11 w-full border border-border bg-background px-3 text-sm text-ink"
           >
             {(Object.keys(villas) as VillaId[]).map((v) => (
               <option key={v} value={v}>
@@ -317,11 +349,11 @@ function Calendario() {
         </div>
         <div>
           <Label htmlFor="bl-desde" className="eyebrow">Del día</Label>
-          <Input id="bl-desde" name="desde" type="number" min={1} max={30} defaultValue={1} className="mt-2" />
+          <Input id="bl-desde" name="desde" type="number" min={1} max={30} defaultValue={1} className="mt-2 h-11" />
         </div>
         <div>
           <Label htmlFor="bl-hasta" className="eyebrow">Al día</Label>
-          <Input id="bl-hasta" name="hasta" type="number" min={1} max={30} defaultValue={2} className="mt-2" />
+          <Input id="bl-hasta" name="hasta" type="number" min={1} max={30} defaultValue={2} className="mt-2 h-11" />
         </div>
         <div>
           <Label htmlFor="bl-motivo" className="eyebrow">Motivo del bloqueo</Label>
@@ -333,7 +365,7 @@ function Calendario() {
 
 
       <div className="mt-10 overflow-x-auto border border-border bg-card">
-        <table className="w-full text-sm">
+        <table className="w-full min-w-[760px] text-sm">
           <thead>
             <tr className="border-b border-border text-left text-[0.65rem] uppercase tracking-[0.16em] text-muted-foreground">
               <th className="px-4 py-3">Ref.</th>
@@ -404,7 +436,7 @@ function Pill({ estado }: { estado: string }) {
 function Encabezado({ titulo, sub }: { titulo: string; sub: string }) {
   return (
     <div>
-      <h1 className="font-serif text-3xl text-ink">{titulo}</h1>
+      <h1 className="font-serif text-2xl text-ink sm:text-3xl">{titulo}</h1>
       <p className="mt-2 text-sm text-muted-foreground">{sub}</p>
     </div>
   );
@@ -431,7 +463,7 @@ function Limpiezas() {
         sub={`${pendientes} tareas pendientes de ${items.length} programadas.`}
       />
       <div className="mt-8 overflow-x-auto border border-border bg-card">
-        <table className="w-full text-sm">
+        <table className="w-full min-w-[760px] text-sm">
           <thead>
             <tr className="border-b border-border text-left text-[0.65rem] uppercase tracking-[0.16em] text-muted-foreground">
               <th className="px-4 py-3">Estado</th>
@@ -506,7 +538,7 @@ function Incidencias() {
             key={f}
             onClick={() => setFiltro(f)}
             className={cn(
-              "border px-3 py-2 text-xs uppercase tracking-[0.14em] transition-colors",
+              "h-11 border px-4 text-xs uppercase tracking-[0.14em] transition-colors",
               filtro === f ? "border-ink bg-ink text-background" : "border-border text-muted-foreground hover:text-ink",
             )}
           >
@@ -516,7 +548,7 @@ function Incidencias() {
       </div>
 
       <div className="mt-8 overflow-x-auto border border-border bg-card">
-        <table className="w-full text-sm">
+        <table className="w-full min-w-[760px] text-sm">
           <thead>
             <tr className="border-b border-border text-left text-[0.65rem] uppercase tracking-[0.16em] text-muted-foreground">
               <th className="px-4 py-3">Ref.</th>
@@ -587,7 +619,7 @@ function Ingresos() {
       </div>
 
       <div className="mt-8 overflow-x-auto border border-border bg-card">
-        <table className="w-full text-sm">
+        <table className="w-full min-w-[760px] text-sm">
           <thead>
             <tr className="border-b border-border text-left text-[0.65rem] uppercase tracking-[0.16em] text-muted-foreground">
               <th className="px-4 py-3">Villa</th>
@@ -665,7 +697,7 @@ function Mensajeria() {
     const texto = String(new FormData(form).get("respuesta") || "").trim();
     if (!texto) return;
     añadirMensaje({ huesped: conv.huesped, villa: conv.villa, de: "host", texto });
-    toast.success("Respuesta enviada (demo)");
+    toast.success("Respuesta enviada");
     form.reset();
   };
 
@@ -734,8 +766,8 @@ function Mensajeria() {
               </Burbuja>
             ))}
           </div>
-          <form onSubmit={responder} className="flex gap-3 border-t border-border p-4">
-            <Input name="respuesta" placeholder="Escribe una respuesta…" required />
+          <form onSubmit={responder} className="flex flex-col gap-3 border-t border-border p-4 sm:flex-row">
+            <Input name="respuesta" placeholder="Escribe una respuesta…" className="h-11" required />
             <Button type="submit">Enviar</Button>
           </form>
         </div>

@@ -15,7 +15,7 @@ import {
 } from "@/lib/remansa-storage";
 
 const campoClase =
-  "mt-2 rounded-none border-border bg-background text-sm shadow-none focus-visible:ring-0";
+  "mt-2 h-11 rounded-none border-border bg-background text-sm shadow-none focus-visible:ring-0";
 
 export function ContenidoWeb() {
   const [contenidos] = useContenidos();
@@ -45,7 +45,7 @@ export function ContenidoWeb() {
     <section>
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <h1 className="font-serif text-3xl text-ink">Contenido web</h1>
+          <h1 className="font-serif text-2xl text-ink sm:text-3xl">Contenido web</h1>
           <p className="mt-1 text-sm text-muted-foreground">
             Edita los textos, precios y políticas que se publican en las landings de cada villa.
           </p>
@@ -59,7 +59,7 @@ export function ContenidoWeb() {
             type="button"
             onClick={() => setVilla(v)}
             className={cn(
-              "border px-3 py-2 text-xs uppercase tracking-[0.14em] transition-colors",
+              "h-11 border px-4 text-xs uppercase tracking-[0.14em] transition-colors",
               villa === v
                 ? "border-ink bg-ink text-background"
                 : "border-border text-muted-foreground hover:text-ink",
@@ -179,7 +179,7 @@ export function ContenidoWeb() {
                             ),
                           })
                         }
-                        className="mt-0 rounded-none border-border bg-background text-sm shadow-none focus-visible:ring-0"
+                        className="mt-0 h-11 rounded-none border-border bg-background text-sm shadow-none focus-visible:ring-0"
                       />
                     </td>
                     <td className="px-4 py-3">
@@ -194,7 +194,7 @@ export function ContenidoWeb() {
                             ),
                           })
                         }
-                        className="mt-0 w-28 rounded-none border-border bg-background text-sm shadow-none focus-visible:ring-0"
+                        className="mt-0 h-11 w-28 rounded-none border-border bg-background text-sm shadow-none focus-visible:ring-0"
                       />
                     </td>
                     <td className="px-4 py-3">
@@ -209,7 +209,7 @@ export function ContenidoWeb() {
                             ),
                           })
                         }
-                        className="mt-0 w-24 rounded-none border-border bg-background text-sm shadow-none focus-visible:ring-0"
+                        className="mt-0 h-11 w-24 rounded-none border-border bg-background text-sm shadow-none focus-visible:ring-0"
                       />
                     </td>
                   </tr>
@@ -286,7 +286,7 @@ export function ContenidoWeb() {
           <button
             type="button"
             onClick={() => guardado && setBorrador(guardado)}
-            className="text-xs uppercase tracking-[0.14em] text-muted-foreground hover:text-ink"
+            className="h-11 px-2 text-xs uppercase tracking-[0.14em] text-muted-foreground hover:text-ink"
           >
             Descartar
           </button>
@@ -301,7 +301,7 @@ export function ContenidoWeb() {
 
 function Bloque({ titulo, children }: { titulo: string; children: React.ReactNode }) {
   return (
-    <div className="space-y-6 border border-border bg-card p-6 md:p-8">
+    <div className="space-y-6 border border-border bg-card p-4 sm:p-6 md:p-8">
       <p className="text-[0.65rem] uppercase tracking-[0.2em] text-muted-foreground">{titulo}</p>
       {children}
     </div>
@@ -348,13 +348,13 @@ function ListaEditable({
               value={item}
               placeholder={placeholder}
               onChange={(e) => onChange(items.map((x, j) => (j === i ? e.target.value : x)))}
-              className="rounded-none border-border bg-background text-sm shadow-none focus-visible:ring-0"
+              className="h-11 rounded-none border-border bg-background text-sm shadow-none focus-visible:ring-0"
             />
             <button
               type="button"
               aria-label="Quitar línea"
               onClick={() => onChange(items.filter((_, j) => j !== i))}
-              className="border border-border p-2 text-muted-foreground hover:text-ink"
+              className="flex h-11 w-11 shrink-0 items-center justify-center border border-border text-muted-foreground hover:text-ink"
             >
               <X className="h-3.5 w-3.5" />
             </button>
@@ -364,7 +364,7 @@ function ListaEditable({
       <button
         type="button"
         onClick={() => onChange([...items, ""])}
-        className="mt-3 inline-flex items-center gap-2 text-xs uppercase tracking-[0.14em] text-muted-foreground hover:text-ink"
+        className="mt-3 inline-flex h-11 items-center gap-2 text-xs uppercase tracking-[0.14em] text-muted-foreground hover:text-ink"
       >
         <Plus className="h-3.5 w-3.5" /> Añadir línea
       </button>
