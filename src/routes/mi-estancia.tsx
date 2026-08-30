@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { añadirMensaje, sembrarSiHaceFalta } from "@/lib/remansa-storage";
+import { añadirMensaje, buscarReservaGuardada, sembrarSiHaceFalta } from "@/lib/remansa-storage";
 import {
   ArrowLeft,
   CalendarDays,
