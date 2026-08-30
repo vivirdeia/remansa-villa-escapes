@@ -632,7 +632,7 @@ function Ingresos() {
 /* ---------------- mensajería ---------------- */
 
 function Mensajeria() {
-  const [activo, setActivo] = useState(mensajes[0].id);
+  const [activo, setActivo] = useState(mensajes[0]!.id);
   const conv = mensajes.find((m) => m.id === activo)!;
 
   return (
