@@ -97,12 +97,24 @@ function Admin() {
               </button>
             ))}
           </nav>
-          <button
-            onClick={() => setDentro(false)}
-            className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.14em] text-muted-foreground hover:text-ink"
-          >
-            <LogOut className="h-3.5 w-3.5" /> Salir
-          </button>
+          <div className="flex items-center gap-5">
+            <button
+              onClick={() => {
+                restablecerDemo();
+                toast.success("Datos de demo restablecidos");
+              }}
+              className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.14em] text-muted-foreground hover:text-ink"
+              title="Borra el estado guardado en este navegador y vuelve a sembrar los datos originales"
+            >
+              <RotateCcw className="h-3.5 w-3.5" /> Restablecer datos de demo
+            </button>
+            <button
+              onClick={() => setDentro(false)}
+              className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.14em] text-muted-foreground hover:text-ink"
+            >
+              <LogOut className="h-3.5 w-3.5" /> Salir
+            </button>
+          </div>
         </div>
       </header>
 
