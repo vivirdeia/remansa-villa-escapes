@@ -665,7 +665,7 @@ function Mensajeria() {
     const texto = String(new FormData(form).get("respuesta") || "").trim();
     if (!texto) return;
     añadirMensaje({ huesped: conv.huesped, villa: conv.villa, de: "host", texto });
-    toast.success("Respuesta enviada (demo)");
+    toast.success("Respuesta enviada");
     form.reset();
   };
 
