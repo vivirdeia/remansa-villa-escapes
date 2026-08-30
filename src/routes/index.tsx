@@ -1,5 +1,9 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { ClientOnly, createFileRoute, Link } from "@tanstack/react-router";
+import { lazy, Suspense } from "react";
 import { Compass, HandHeart, KeyRound, Leaf } from "lucide-react";
+
+const VillasMap = lazy(() => import("@/components/site/VillasMap"));
+
 
 import { SiteHeader } from "@/components/site/SiteHeader";
 import { SiteFooter } from "@/components/site/SiteFooter";
@@ -83,12 +87,6 @@ const pilares = [
     title: "Ritmo lento, huella corta",
     text: "Lino lavado en la comarca, jabones de aceite de oliva, huerta de temporada. Lo bonito y lo sensato suelen coincidir.",
   },
-];
-
-const lugares = [
-  { villa: "Villa Azahar", x: 26, y: 42, color: "var(--azahar)" },
-  { villa: "Villa Poniente", x: 55, y: 28, color: "var(--poniente)" },
-  { villa: "Villa Salobre", x: 74, y: 58, color: "var(--salobre)" },
 ];
 
 const resenas = [
@@ -249,72 +247,15 @@ function Home() {
             </ul>
           </div>
 
-          {/* Mapa ilustrativo */}
+          {/* Mapa real e interactivo */}
           <div className="relative aspect-[4/3] w-full overflow-hidden rounded-sm border border-border bg-card">
-            <svg viewBox="0 0 100 75" className="absolute inset-0 size-full" role="img" aria-label="Mapa ilustrativo de la costa con la ubicación de las tres villas">
-              <rect width="100" height="75" fill="var(--card)" />
-              <path
-                d="M0 58 C 18 52, 30 60, 44 50 C 58 40, 66 46, 78 36 C 88 28, 94 30, 100 24 L100 75 L0 75 Z"
-                fill="var(--sea)"
-                opacity="0.16"
-              />
-              <path
-                d="M0 58 C 18 52, 30 60, 44 50 C 58 40, 66 46, 78 36 C 88 28, 94 30, 100 24"
-                fill="none"
-                stroke="var(--sea)"
-                strokeWidth="0.5"
-              />
-              {[64, 68, 72].map((y) => (
-                <path
-                  key={y}
-                  d={`M0 ${y} C 25 ${y - 3}, 50 ${y + 3}, 100 ${y - 2}`}
-                  fill="none"
-                  stroke="var(--sea)"
-                  strokeWidth="0.25"
-                  opacity="0.35"
-                />
-              ))}
-              {Array.from({ length: 22 }).map((_, i) => (
-                <circle
-                  key={i}
-                  cx={4 + ((i * 37) % 92)}
-                  cy={8 + ((i * 53) % 34)}
-                  r="0.9"
-                  fill="var(--olive)"
-                  opacity="0.3"
-                />
-              ))}
-              {lugares.map((l) => (
-                <g key={l.villa}>
-                  <text
-                    x={l.x}
-                    y={l.y - 5.2}
-                    textAnchor="middle"
-                    fill="var(--ink)"
-                    fontFamily="var(--font-serif)"
-                    fontSize="3.1"
-                    letterSpacing="0.05"
-                  >
-                    {l.villa}
-                  </text>
-                  <circle cx={l.x} cy={l.y} r="3.4" fill="var(--sand)" stroke="var(--border)" strokeWidth="0.3" />
-                  <circle cx={l.x} cy={l.y} r="1.5" fill={l.color} />
-                </g>
-              ))}
-              <text
-                x="96"
-                y="70"
-                textAnchor="end"
-                fill="var(--muted-foreground)"
-                fontSize="2.1"
-                letterSpacing="0.5"
-                fontFamily="var(--font-sans)"
-              >
-                MAR MEDITERRÁNEO
-              </text>
-            </svg>
-
+            <ClientOnly fallback={<div className="size-full surface-sand" />}>
+              <Suspense fallback={<div className="size-full surface-sand" />}>
+                <VillasMap />
+              </Suspense>
+            </ClientOnly>
           </div>
+
         </div>
       </section>
 
