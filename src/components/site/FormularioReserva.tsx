@@ -57,7 +57,7 @@ export function FormularioReserva({
     return (
       <div className="border border-border bg-card p-8 md:p-10">
         <p className="eyebrow">Solicitud recibida</p>
-        <h3 className="display-sm mt-4 text-ink">
+        <h3 className="display-md mt-4 text-ink">
           Gracias, {reserva.huesped}. Ya tenemos tus fechas.
         </h3>
         <p className="mt-5 text-sm leading-relaxed text-muted-foreground">
