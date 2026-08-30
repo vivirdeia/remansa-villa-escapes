@@ -536,3 +536,114 @@ export function useContenidoVilla(villa: VillaId): ContenidoVilla {
     contenidoSeed.find((c) => c.villa === villa)!
   );
 }
+
+/* ---------------- solicitudes de reserva desde la web ---------------- */
+
+const ALFABETO = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+
+function sufijoAleatorio(largo = 4) {
+  let s = "";
+  for (let i = 0; i < largo; i += 1) {
+    s += ALFABETO[Math.floor(Math.random() * ALFABETO.length)];
+  }
+  return s;
+}
+
+/** Código único tipo AZAHAR-2026-K7QP. */
+export function generarCodigo(villa: VillaId, año: number, existentes: string[]): string {
+  let codigo = "";
+  do {
+    codigo = `${villa.toUpperCase()}-${año}-${sufijoAleatorio()}`;
+  } while (existentes.includes(codigo));
+  return codigo;
+}
+
+/** Precio por noche según el mes de llegada y las temporadas configuradas. */
+export function precioPorNoche(villa: VillaId, llegadaISO: string): number {
+  const { temporadas } = getContenido(villa);
+  const mes = new Date(`${llegadaISO}T00:00:00`).getMonth() + 1;
+  const indice = mes === 7 || mes === 8 ? 3 : mes === 6 || mes === 9 ? 2 : [4, 5, 10].includes(mes) ? 1 : 0;
+  return temporadas[Math.min(indice, temporadas.length - 1)]?.precio ?? 0;
+}
+
+function diaDeSeptiembre2026(iso: string): number {
+  const d = new Date(`${iso}T00:00:00`);
+  if (Number.isNaN(d.getTime())) return 0;
+  return d.getFullYear() === 2026 && d.getMonth() === 8 ? d.getDate() : 0;
+}
+
+export type SolicitudReserva = {
+  villa: VillaId;
+  nombre: string;
+  email: string;
+  entrada: string; // ISO
+  salida: string; // ISO
+  huespedes: number;
+  mensaje?: string;
+};
+
+/**
+ * Crea una reserva pendiente de confirmación a partir del formulario público
+ * y devuelve la reserva creada (con su código de acceso).
+ */
+export function crearSolicitudReserva(datos: SolicitudReserva): Booking {
+  const actuales = getBookings();
+  const año = new Date(`${datos.entrada}T00:00:00`).getFullYear() || new Date().getFullYear();
+  const codigo = generarCodigo(
+    datos.villa,
+    año,
+    actuales.map((b) => b.codigo ?? ""),
+  );
+
+  const noches = Math.max(
+    1,
+    Math.round(
+      (new Date(`${datos.salida}T00:00:00`).getTime() -
+        new Date(`${datos.entrada}T00:00:00`).getTime()) /
+        86400000,
+    ),
+  );
+  const contenido = getContenido(datos.villa);
+  const total = noches * precioPorNoche(datos.villa, datos.entrada) + contenido.limpiezaFinal;
+
+  const reserva: Booking = {
+    id: `R-${Date.now().toString().slice(-6)}`,
+    villa: datos.villa,
+    huesped: datos.nombre,
+    desde: diaDeSeptiembre2026(datos.entrada),
+    hasta: diaDeSeptiembre2026(datos.salida),
+    estado: "pendiente",
+    total,
+    canal: "Web",
+    codigo,
+    llegada: datos.entrada,
+    salida: datos.salida,
+    huespedes: datos.huespedes,
+    email: datos.email,
+    ...(datos.mensaje?.trim() ? { nota: datos.mensaje.trim() } : {}),
+  };
+
+  setBookings([...actuales, reserva]);
+
+  if (datos.mensaje?.trim()) {
+    añadirMensaje({
+      huesped: datos.nombre,
+      villa: datos.villa,
+      de: "huesped",
+      texto: datos.mensaje.trim(),
+    });
+  }
+
+  return reserva;
+}
+
+/** Busca una reserva creada desde la web por su código de acceso. */
+export function buscarReservaGuardada(codigo: string): Booking | undefined {
+  const c = codigo.trim().toUpperCase();
+  return getBookings().find((b) => b.codigo?.toUpperCase() === c);
+}
+
+/** Cambia el estado de una reserva (por ejemplo, de pendiente a confirmada). */
+export function actualizarEstadoReserva(id: string, estado: EstadoReserva) {
+  setBookings(getBookings().map((b) => (b.id === id ? { ...b, estado } : b)));
+}
