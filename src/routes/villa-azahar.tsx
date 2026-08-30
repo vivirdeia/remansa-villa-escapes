@@ -265,7 +265,7 @@ function VillaAzahar() {
                   i === 4 && "md:col-span-2",
                 )}
               >
-                <div className={cn("media-frame", i === 0 ? "aspect-[16/10]" : "aspect-[4/3]")}>
+                <div className={cn("media-frame", i === 0 ? "aspect-[16/10]" : i === 1 ? "aspect-[3/4]" : "aspect-[4/3]")}>
                   <img src={g.img} alt={g.pie} width={1400} height={1000} loading="lazy" />
                 </div>
                 <figcaption className="mt-3 flex items-baseline justify-between gap-4">

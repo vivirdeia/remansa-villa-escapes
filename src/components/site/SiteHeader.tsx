@@ -32,7 +32,7 @@ export function SiteHeader({ transparent = false }: { transparent?: boolean }) {
           to="/"
           className={cn(
             "font-serif text-2xl tracking-[0.22em] uppercase transition-colors duration-500",
-            light ? "text-background" : "text-ink",
+            light ? "text-background drop-shadow-[0_1px_12px_rgba(0,0,0,0.45)]" : "text-ink",
           )}
         >
           Remansa
@@ -45,7 +45,7 @@ export function SiteHeader({ transparent = false }: { transparent?: boolean }) {
               href={`${l.to}#${l.hash}`}
               className={cn(
                 "text-[0.7rem] uppercase tracking-[0.2em] transition-opacity duration-300 hover:opacity-60",
-                light ? "text-background" : "text-muted-foreground",
+                light ? "text-background drop-shadow-[0_1px_10px_rgba(0,0,0,0.5)]" : "text-muted-foreground",
               )}
             >
               {l.label}
@@ -58,7 +58,7 @@ export function SiteHeader({ transparent = false }: { transparent?: boolean }) {
           className={cn(
             "border px-5 py-2.5 text-[0.7rem] uppercase tracking-[0.2em] transition-colors duration-500",
             light
-              ? "border-background/60 text-background hover:bg-background hover:text-ink"
+              ? "border-background/70 text-background backdrop-blur-[2px] hover:bg-background hover:text-ink"
               : "border-border text-foreground hover:border-sea hover:text-sea",
           )}
         >
