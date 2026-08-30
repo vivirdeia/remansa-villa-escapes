@@ -74,53 +74,85 @@ function Admin() {
   return (
     <div className="min-h-screen bg-background">
       <header className="sticky top-0 z-40 border-b border-border bg-background/95 backdrop-blur">
-        <div className="mx-auto flex max-w-[1500px] flex-wrap items-center justify-between gap-4 px-6 py-4">
-          <div className="flex items-baseline gap-4">
-            <Link to="/" className="font-serif text-xl tracking-[0.22em] uppercase text-ink">
-              Remansa
-            </Link>
-            <span className="text-[0.65rem] uppercase tracking-[0.2em] text-muted-foreground">
-              Backoffice
-            </span>
-          </div>
-          <nav className="flex flex-wrap gap-1">
-            {secciones.map((s) => (
+        <div className="mx-auto max-w-[1500px] px-4 py-3 sm:px-6 sm:py-4">
+          <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 lg:flex lg:flex-wrap lg:justify-between">
+            <div className="flex min-w-0 items-baseline gap-3">
+              <Link to="/" className="font-serif text-lg tracking-[0.22em] uppercase text-ink sm:text-xl">
+                Remansa
+              </Link>
+              <span className="truncate text-[0.65rem] uppercase tracking-[0.2em] text-muted-foreground">
+                Backoffice
+              </span>
+            </div>
+
+            <nav className="hidden lg:order-2 lg:flex lg:flex-wrap lg:gap-1">
+              {secciones.map((s) => (
+                <button
+                  key={s.id}
+                  onClick={() => setSeccion(s.id)}
+                  className={cn(
+                    "px-3 py-2 text-xs uppercase tracking-[0.14em] transition-colors",
+                    seccion === s.id
+                      ? "bg-ink text-background"
+                      : "text-muted-foreground hover:text-ink",
+                  )}
+                >
+                  {s.label}
+                </button>
+              ))}
+            </nav>
+
+            <div className="flex shrink-0 items-center gap-1 sm:gap-3 lg:order-3">
               <button
-                key={s.id}
-                onClick={() => setSeccion(s.id)}
-                className={cn(
-                  "px-3 py-2 text-xs uppercase tracking-[0.14em] transition-colors",
-                  seccion === s.id
-                    ? "bg-ink text-background"
-                    : "text-muted-foreground hover:text-ink",
-                )}
+                onClick={() => {
+                  restablecerDemo();
+                  toast.success("Datos restablecidos");
+                }}
+                className="inline-flex h-11 items-center gap-2 px-2 text-xs uppercase tracking-[0.14em] text-muted-foreground hover:text-ink"
+                title="Borra el estado guardado en este navegador y vuelve a cargar los datos originales"
               >
-                {s.label}
+                <RotateCcw className="h-4 w-4 shrink-0" />
+                <span className="hidden sm:inline">Restablecer datos</span>
+                <span className="sr-only sm:hidden">Restablecer datos</span>
               </button>
-            ))}
-          </nav>
-          <div className="flex items-center gap-5">
-            <button
-              onClick={() => {
-                restablecerDemo();
-                toast.success("Datos de demo restablecidos");
-              }}
-              className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.14em] text-muted-foreground hover:text-ink"
-              title="Borra el estado guardado en este navegador y vuelve a sembrar los datos originales"
-            >
-              <RotateCcw className="h-3.5 w-3.5" /> Restablecer datos de demo
-            </button>
-            <button
-              onClick={() => setDentro(false)}
-              className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.14em] text-muted-foreground hover:text-ink"
-            >
-              <LogOut className="h-3.5 w-3.5" /> Salir
-            </button>
+              <button
+                onClick={() => setDentro(false)}
+                className="inline-flex h-11 items-center gap-2 px-2 text-xs uppercase tracking-[0.14em] text-muted-foreground hover:text-ink"
+              >
+                <LogOut className="h-4 w-4 shrink-0" />
+                <span className="hidden sm:inline">Salir</span>
+                <span className="sr-only sm:hidden">Salir</span>
+              </button>
+            </div>
           </div>
+
+          {/* Navegación mobile: pestañas con scroll horizontal */}
+          <nav
+            aria-label="Secciones del backoffice"
+            className="-mx-4 mt-3 overflow-x-auto px-4 lg:hidden [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          >
+            <div className="flex w-max gap-1 pb-1">
+              {secciones.map((s) => (
+                <button
+                  key={s.id}
+                  onClick={() => setSeccion(s.id)}
+                  aria-current={seccion === s.id ? "page" : undefined}
+                  className={cn(
+                    "h-11 shrink-0 border px-4 text-xs whitespace-nowrap uppercase tracking-[0.14em] transition-colors",
+                    seccion === s.id
+                      ? "border-ink bg-ink text-background"
+                      : "border-border text-muted-foreground",
+                  )}
+                >
+                  {s.label}
+                </button>
+              ))}
+            </div>
+          </nav>
         </div>
       </header>
 
-      <main className="mx-auto max-w-[1500px] px-6 py-10">
+      <main className="mx-auto max-w-[1500px] px-4 py-8 sm:px-6 sm:py-10">
         {seccion === "calendario" && <Calendario />}
         {seccion === "limpiezas" && <Limpiezas />}
         {seccion === "incidencias" && <Incidencias />}
