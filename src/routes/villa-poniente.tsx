@@ -13,7 +13,7 @@ import {
   Waves,
   Wifi,
 } from "lucide-react";
-import { toast } from "sonner";
+import { FormularioReserva } from "@/components/site/FormularioReserva";
 
 import { SiteHeader } from "@/components/site/SiteHeader";
 import { SiteFooter } from "@/components/site/SiteFooter";
@@ -145,23 +145,6 @@ function VillaPoniente() {
     ],
     [mes],
   );
-
-  const [form, setForm] = useState({
-    nombre: "",
-    email: "",
-    entrada: "",
-    salida: "",
-    huespedes: "2",
-    mensaje: "",
-  });
-
-  const enviar = (e: React.FormEvent) => {
-    e.preventDefault();
-    toast.success("Solicitud enviada", {
-      description: `Gracias, ${form.nombre || "de nuevo"}. Te respondemos en menos de 24 h con la confirmación y el presupuesto.`,
-    });
-    setForm({ nombre: "", email: "", entrada: "", salida: "", huespedes: "2", mensaje: "" });
-  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -393,99 +376,7 @@ function VillaPoniente() {
             </p>
           </div>
 
-          <form onSubmit={enviar} className="space-y-6 border border-border bg-card p-8 md:p-10">
-            <div className="grid gap-6 sm:grid-cols-2">
-              <div className="space-y-2">
-                <Label htmlFor="nombre" className="eyebrow">
-                  Nombre
-                </Label>
-                <Input
-                  id="nombre"
-                  required
-                  value={form.nombre}
-                  onChange={(e) => setForm({ ...form, nombre: e.target.value })}
-                  className="rounded-none border-0 border-b border-border bg-transparent px-0 shadow-none focus-visible:ring-0"
-                  placeholder="Clara Bonet"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="email" className="eyebrow">
-                  Email
-                </Label>
-                <Input
-                  id="email"
-                  type="email"
-                  required
-                  value={form.email}
-                  onChange={(e) => setForm({ ...form, email: e.target.value })}
-                  className="rounded-none border-0 border-b border-border bg-transparent px-0 shadow-none focus-visible:ring-0"
-                  placeholder="clara@correo.es"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="entrada" className="eyebrow">
-                  Entrada
-                </Label>
-                <Input
-                  id="entrada"
-                  type="date"
-                  required
-                  value={form.entrada}
-                  onChange={(e) => setForm({ ...form, entrada: e.target.value })}
-                  className="rounded-none border-0 border-b border-border bg-transparent px-0 shadow-none focus-visible:ring-0"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="salida" className="eyebrow">
-                  Salida
-                </Label>
-                <Input
-                  id="salida"
-                  type="date"
-                  required
-                  value={form.salida}
-                  onChange={(e) => setForm({ ...form, salida: e.target.value })}
-                  className="rounded-none border-0 border-b border-border bg-transparent px-0 shadow-none focus-visible:ring-0"
-                />
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="huespedes" className="eyebrow">
-                Huéspedes
-              </Label>
-              <Input
-                id="huespedes"
-                type="number"
-                min={1}
-                max={4}
-                value={form.huespedes}
-                onChange={(e) => setForm({ ...form, huespedes: e.target.value })}
-                className="rounded-none border-0 border-b border-border bg-transparent px-0 shadow-none focus-visible:ring-0"
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="mensaje" className="eyebrow">
-                Cuéntanos algo
-              </Label>
-              <Textarea
-                id="mensaje"
-                rows={4}
-                value={form.mensaje}
-                onChange={(e) => setForm({ ...form, mensaje: e.target.value })}
-                className="resize-none rounded-none border-0 border-b border-border bg-transparent px-0 shadow-none focus-visible:ring-0"
-                placeholder="Es nuestro aniversario y llegamos tarde en avión…"
-              />
-            </div>
-
-            <Button type="submit" variant="sea" size="editorial" className="w-full">
-              Solicitar reserva
-            </Button>
-            <p className="text-center text-[0.7rem] leading-relaxed text-muted-foreground">
-              Solicitud sin compromiso. Todavía no se realiza ningún cargo.
-            </p>
-          </form>
+          <FormularioReserva villa="poniente" huespedesMax={contenido.huespedesMax} placeholderMensaje="Es nuestro aniversario, cualquier detalle suma…" />
         </div>
       </section>
 
