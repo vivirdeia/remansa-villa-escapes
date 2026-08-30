@@ -86,9 +86,9 @@ const pilares = [
 ];
 
 const lugares = [
-  { villa: "Villa Azahar", x: 26, y: 42, color: "bg-azahar" },
-  { villa: "Villa Poniente", x: 55, y: 28, color: "bg-poniente" },
-  { villa: "Villa Salobre", x: 74, y: 58, color: "bg-salobre" },
+  { villa: "Villa Azahar", x: 26, y: 42, color: "var(--azahar)" },
+  { villa: "Villa Poniente", x: 55, y: 28, color: "var(--poniente)" },
+  { villa: "Villa Salobre", x: 74, y: 58, color: "var(--salobre)" },
 ];
 
 const resenas = [
@@ -287,7 +287,7 @@ function Home() {
               {lugares.map((l) => (
                 <g key={l.villa}>
                   <circle cx={l.x} cy={l.y} r="3.4" fill="var(--sand)" stroke="var(--border)" strokeWidth="0.3" />
-                  <circle cx={l.x} cy={l.y} r="1.5" className={l.color} fill="currentColor" />
+                  <circle cx={l.x} cy={l.y} r="1.5" fill={l.color} />
                 </g>
               ))}
             </svg>
