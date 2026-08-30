@@ -291,7 +291,8 @@ function Calendario() {
                   <div key={d} className="h-16 border-l border-border/60" />
                 ))}
                 {bookings
-                  .filter((b) => b.villa === v)
+                  .filter((b) => b.villa === v && b.desde >= 1 && b.hasta >= b.desde)
+
                   .map((b) => (
                     <div
                       key={b.id}
