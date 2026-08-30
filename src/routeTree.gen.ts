@@ -10,6 +10,8 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AdminRouteImport } from './routes/admin'
+import { Route as MiEstanciaRouteImport } from './routes/mi-estancia'
 import { Route as VillaAzaharRouteImport } from './routes/villa-azahar'
 import { Route as VillaPonienteRouteImport } from './routes/villa-poniente'
 import { Route as VillaSalobreRouteImport } from './routes/villa-salobre'
@@ -17,6 +19,16 @@ import { Route as VillaSalobreRouteImport } from './routes/villa-salobre'
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MiEstanciaRoute = MiEstanciaRouteImport.update({
+  id: '/mi-estancia',
+  path: '/mi-estancia',
   getParentRoute: () => rootRouteImport,
 } as any)
 const VillaAzaharRoute = VillaAzaharRouteImport.update({
@@ -37,12 +49,16 @@ const VillaSalobreRoute = VillaSalobreRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRoute
+  '/mi-estancia': typeof MiEstanciaRoute
   '/villa-azahar': typeof VillaAzaharRoute
   '/villa-poniente': typeof VillaPonienteRoute
   '/villa-salobre': typeof VillaSalobreRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRoute
+  '/mi-estancia': typeof MiEstanciaRoute
   '/villa-azahar': typeof VillaAzaharRoute
   '/villa-poniente': typeof VillaPonienteRoute
   '/villa-salobre': typeof VillaSalobreRoute
@@ -50,20 +66,43 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/admin': typeof AdminRoute
+  '/mi-estancia': typeof MiEstanciaRoute
   '/villa-azahar': typeof VillaAzaharRoute
   '/villa-poniente': typeof VillaPonienteRoute
   '/villa-salobre': typeof VillaSalobreRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/villa-azahar' | '/villa-poniente' | '/villa-salobre'
+  fullPaths:
+    | '/'
+    | '/admin'
+    | '/mi-estancia'
+    | '/villa-azahar'
+    | '/villa-poniente'
+    | '/villa-salobre'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/villa-azahar' | '/villa-poniente' | '/villa-salobre'
-  id: '__root__' | '/' | '/villa-azahar' | '/villa-poniente' | '/villa-salobre'
+  to:
+    | '/'
+    | '/admin'
+    | '/mi-estancia'
+    | '/villa-azahar'
+    | '/villa-poniente'
+    | '/villa-salobre'
+  id:
+    | '__root__'
+    | '/'
+    | '/admin'
+    | '/mi-estancia'
+    | '/villa-azahar'
+    | '/villa-poniente'
+    | '/villa-salobre'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AdminRoute: typeof AdminRoute
+  MiEstanciaRoute: typeof MiEstanciaRoute
   VillaAzaharRoute: typeof VillaAzaharRoute
   VillaPonienteRoute: typeof VillaPonienteRoute
   VillaSalobreRoute: typeof VillaSalobreRoute
@@ -76,6 +115,20 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mi-estancia': {
+      id: '/mi-estancia'
+      path: '/mi-estancia'
+      fullPath: '/mi-estancia'
+      preLoaderRoute: typeof MiEstanciaRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/villa-azahar': {
@@ -104,6 +157,8 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AdminRoute: AdminRoute,
+  MiEstanciaRoute: MiEstanciaRoute,
   VillaAzaharRoute: VillaAzaharRoute,
   VillaPonienteRoute: VillaPonienteRoute,
   VillaSalobreRoute: VillaSalobreRoute,
