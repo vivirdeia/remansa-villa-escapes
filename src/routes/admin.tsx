@@ -410,7 +410,7 @@ function Encabezado({ titulo, sub }: { titulo: string; sub: string }) {
 /* ---------------- limpiezas ---------------- */
 
 function Limpiezas() {
-  const [items, setItems] = useState(limpiezasIniciales);
+  const [items, setItems] = useLimpiezas();
   const pendientes = items.filter((i) => !i.hecha).length;
 
   const alternar = (id: string) => {
@@ -471,7 +471,7 @@ function Limpiezas() {
 /* ---------------- incidencias ---------------- */
 
 function Incidencias() {
-  const [items, setItems] = useState(incidenciasIniciales);
+  const [items, setItems] = useIncidencias();
   const [filtro, setFiltro] = useState<"todas" | VillaId>("todas");
   const visibles = items.filter((i) => filtro === "todas" || i.villa === filtro);
 
