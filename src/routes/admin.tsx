@@ -293,6 +293,42 @@ function Calendario() {
         </span>
       </div>
 
+      <form
+        onSubmit={crearBloqueo}
+        className="mt-10 grid gap-4 border border-border bg-card p-6 md:grid-cols-[1fr_100px_100px_1.4fr_auto] md:items-end"
+      >
+        <div>
+          <Label htmlFor="bl-villa" className="eyebrow">Villa</Label>
+          <select
+            id="bl-villa"
+            name="villa"
+            defaultValue="azahar"
+            className="mt-2 h-10 w-full border border-border bg-background px-3 text-sm text-ink"
+          >
+            {(Object.keys(villas) as VillaId[]).map((v) => (
+              <option key={v} value={v}>
+                {villas[v].name}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div>
+          <Label htmlFor="bl-desde" className="eyebrow">Del día</Label>
+          <Input id="bl-desde" name="desde" type="number" min={1} max={30} defaultValue={1} className="mt-2" />
+        </div>
+        <div>
+          <Label htmlFor="bl-hasta" className="eyebrow">Al día</Label>
+          <Input id="bl-hasta" name="hasta" type="number" min={1} max={30} defaultValue={2} className="mt-2" />
+        </div>
+        <div>
+          <Label htmlFor="bl-motivo" className="eyebrow">Motivo del bloqueo</Label>
+          <Input id="bl-motivo" name="motivo" placeholder="Mantenimiento de la piscina" className="mt-2" required />
+        </div>
+        <Button type="submit">Añadir bloqueo</Button>
+      </form>
+
+
+
       <div className="mt-10 overflow-x-auto border border-border bg-card">
         <table className="w-full text-sm">
           <thead>
