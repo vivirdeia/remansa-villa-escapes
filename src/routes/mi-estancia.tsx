@@ -54,6 +54,11 @@ function MiEstancia() {
   const [codigo, setCodigo] = useState("");
   const [reserva, setReserva] = useState<Reserva | null>(null);
 
+  useEffect(() => {
+    sembrarSiHaceFalta();
+  }, []);
+
+
   const entrar = (e: React.FormEvent) => {
     e.preventDefault();
     const encontrada = buscarReserva(codigo);
