@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { añadirMensaje, sembrarSiHaceFalta } from "@/lib/remansa-storage";
+import { añadirMensaje, buscarReservaGuardada, sembrarSiHaceFalta } from "@/lib/remansa-storage";
 import {
   ArrowLeft,
   CalendarDays,
@@ -61,16 +61,28 @@ function MiEstancia() {
 
   const entrar = (e: React.FormEvent) => {
     e.preventDefault();
-    const encontrada = buscarReserva(codigo);
+    const guardada = buscarReservaGuardada(codigo);
+    const encontrada: Reserva | undefined = guardada
+      ? {
+          codigo: guardada.codigo!,
+          villa: guardada.villa,
+          huesped: guardada.huesped,
+          llegada: guardada.llegada ?? "",
+          salida: guardada.salida ?? "",
+          huespedes: guardada.huespedes ?? 2,
+          total: guardada.total,
+        }
+      : buscarReserva(codigo);
     if (!encontrada) {
       toast.error("No encontramos ese código", {
-        description: "Prueba con AZAHAR-2026, PONIENTE-2026 o SALOBRE-2026.",
+        description: "Revisa el código que recibiste al solicitar tu reserva.",
       });
       return;
     }
     setReserva(encontrada);
     toast.success(`Bienvenida a ${villas[encontrada.villa].name}`);
   };
+
 
   return (
     <div className="min-h-screen bg-background">
