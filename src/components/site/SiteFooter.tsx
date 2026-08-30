@@ -71,12 +71,17 @@ export function SiteFooter() {
         <div className="rule-hair mt-16" />
         <div className="mt-8 flex flex-col gap-3 text-xs tracking-wide text-muted-foreground md:flex-row md:items-center md:justify-between">
           <p>© {new Date().getFullYear()} Remansa. Alquiler vacacional en la costa mediterránea.</p>
-          <p className="flex gap-6">
+          <p className="flex flex-wrap gap-x-6 gap-y-2">
             <span>Aviso legal</span>
             <span>Privacidad</span>
             <span>Condiciones de reserva</span>
           </p>
         </div>
+
+        <p className="mt-10 text-center font-serif text-sm italic leading-relaxed text-muted-foreground/80 md:text-left">
+          Caso de uso desarrollado por Isaac Wesley para Vivir de IA
+        </p>
+
       </div>
     </footer>
   );
