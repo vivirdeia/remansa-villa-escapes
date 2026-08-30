@@ -89,12 +89,6 @@ const pilares = [
   },
 ];
 
-const lugares = [
-  { villa: "Villa Azahar", x: 26, y: 42, color: "var(--azahar)" },
-  { villa: "Villa Poniente", x: 55, y: 28, color: "var(--poniente)" },
-  { villa: "Villa Salobre", x: 74, y: 58, color: "var(--salobre)" },
-];
-
 const resenas = [
   {
     text: "Volvimos a casa con la sensación de haber dormido más horas de las que en realidad dormimos. Eso lo hace el sitio, no el reloj.",
