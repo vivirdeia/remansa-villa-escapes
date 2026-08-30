@@ -172,7 +172,38 @@ const dias = Array.from({ length: 30 }, (_, i) => i + 1);
 
 function Calendario() {
   const [filtro, setFiltro] = useState<"todas" | VillaId>("todas");
+  const [bookings, setBookings] = useBookings();
   const lista = (Object.keys(villas) as VillaId[]).filter((v) => filtro === "todas" || v === filtro);
+
+  const crearBloqueo = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const datos = new FormData(e.currentTarget);
+    const villa = datos.get("villa") as VillaId;
+    const desde = Number(datos.get("desde"));
+    const hasta = Number(datos.get("hasta"));
+    const motivo = String(datos.get("motivo") || "").trim();
+
+    if (!villa || !motivo || !desde || !hasta || desde < 1 || hasta > 30 || hasta < desde) {
+      toast.error("Revisa los datos del bloqueo", {
+        description: "Los días deben estar entre 1 y 30 y la salida no puede ser anterior a la entrada.",
+      });
+      return;
+    }
+
+    const nuevo: Booking = {
+      id: `B-${Date.now().toString().slice(-4)}`,
+      villa,
+      huesped: motivo,
+      desde,
+      hasta,
+      estado: "bloqueo",
+      total: 0,
+      canal: "Bloqueo",
+    };
+    setBookings([...bookings, nuevo]);
+    toast.success("Bloqueo añadido al calendario");
+    e.currentTarget.reset();
+  };
 
   return (
     <section>
