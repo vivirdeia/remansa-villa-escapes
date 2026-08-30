@@ -157,6 +157,7 @@ export const STORAGE_KEYS = {
   limpiezas: "remansa.limpiezas",
   incidencias: "remansa.incidencias",
   conversaciones: "remansa.conversaciones",
+  contenido: "remansa.contenido",
 } as const;
 
 export type StorageKey = (typeof STORAGE_KEYS)[keyof typeof STORAGE_KEYS];
@@ -254,6 +255,7 @@ export function sembrarSiHaceFalta() {
   getLimpiezas();
   getIncidencias();
   getConversaciones();
+  getContenidos();
 }
 
 /** Borra el estado de la demo y vuelve a sembrar los datos originales. */
