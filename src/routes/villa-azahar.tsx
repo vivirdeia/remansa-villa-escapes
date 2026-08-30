@@ -55,15 +55,7 @@ export const Route = createFileRoute("/villa-azahar")({
   component: VillaAzahar,
 });
 
-const ficha = [
-  { icon: BedDouble, label: "4 habitaciones" },
-  { icon: Bath, label: "3 baños" },
-  { icon: Users, label: "Hasta 8 huéspedes" },
-  { icon: Waves, label: "Piscina privada" },
-  { icon: Sprout, label: "Jardín de cítricos" },
-  { icon: Car, label: "Parking en la finca" },
-  { icon: Footprints, label: "8 min a pie de la playa" },
-];
+const iconosFicha = [BedDouble, Bath, Users, Waves, Sprout, Car, Footprints];
 
 const amenities = [
   { icon: Wifi, label: "Wifi de fibra", nota: "600 Mb, cobertura en el jardín" },
