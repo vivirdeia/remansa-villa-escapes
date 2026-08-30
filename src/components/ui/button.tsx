@@ -16,12 +16,21 @@ const buttonVariants = cva(
         secondary: "bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80",
         ghost: "hover:bg-accent hover:text-accent-foreground",
         link: "text-primary underline-offset-4 hover:underline",
+        /* Remansa */
+        sea: "bg-sea text-primary-foreground font-normal tracking-[0.16em] uppercase text-xs rounded-none transition-all duration-500 hover:bg-sea-deep",
+        terracotta:
+          "bg-terracotta text-accent-foreground font-normal tracking-[0.16em] uppercase text-xs rounded-none transition-all duration-500 hover:bg-terracotta/85",
+        quiet:
+          "border border-border bg-transparent text-foreground font-normal tracking-[0.16em] uppercase text-xs rounded-none transition-all duration-500 hover:border-sea hover:text-sea",
+        onImage:
+          "border border-background/70 bg-background/10 text-background font-normal tracking-[0.16em] uppercase text-xs rounded-none backdrop-blur-sm transition-all duration-500 hover:bg-background hover:text-ink",
       },
       size: {
         default: "h-9 px-4 py-2",
         sm: "h-8 rounded-md px-3 text-xs",
         lg: "h-10 rounded-md px-8",
         icon: "h-9 w-9",
+        editorial: "h-12 px-9",
       },
     },
     defaultVariants: {
@@ -30,6 +39,7 @@ const buttonVariants = cva(
     },
   },
 );
+
 
 export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>, VariantProps<typeof buttonVariants> {
