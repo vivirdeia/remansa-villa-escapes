@@ -17,6 +17,8 @@ import { toast } from "sonner";
 
 import { SiteHeader } from "@/components/site/SiteHeader";
 import { SiteFooter } from "@/components/site/SiteFooter";
+import { CondicionesCasa } from "@/components/site/CondicionesCasa";
+import { useContenidoVilla } from "@/lib/remansa-storage";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -55,15 +57,7 @@ export const Route = createFileRoute("/villa-salobre")({
   component: VillaSalobre,
 });
 
-const ficha = [
-  { icon: BedDouble, label: "6 habitaciones" },
-  { icon: Bath, label: "5 baños" },
-  { icon: Users, label: "Hasta 12 huéspedes" },
-  { icon: Waves, label: "Acceso propio a cala" },
-  { icon: Flame, label: "Pérgola con brasa" },
-  { icon: Car, label: "Parking para 4 coches" },
-  { icon: Footprints, label: "90 escalones al agua" },
-];
+const iconosFicha = [BedDouble, Bath, Users, Waves, Flame, Car, Footprints];
 
 const amenities = [
   { icon: Wifi, label: "Wifi de fibra", nota: "600 Mb, repetidor en la casa de invitados" },
@@ -82,12 +76,6 @@ const galeria = [
   { img: coveImg, espacio: "La cala", pie: "Noventa escalones y ni un alma" },
 ];
 
-const temporadas = [
-  { nombre: "Temporada baja", meses: "Noviembre – marzo", precio: "380 €", min: "3 noches" },
-  { nombre: "Media", meses: "Abril, mayo, octubre", precio: "540 €", min: "4 noches" },
-  { nombre: "Alta", meses: "Junio, septiembre", precio: "720 €", min: "5 noches" },
-  { nombre: "Muy alta", meses: "Julio y agosto", precio: "980 €", min: "7 noches" },
-];
 
 const cerca = [
   {
@@ -181,9 +169,9 @@ function VillaSalobre() {
             <span className="size-2 rounded-full bg-salobre" />
             <p className="eyebrow text-background/80">Remansa · Villa 03</p>
           </div>
-          <h1 className="display-xl reveal-up mt-6 text-background">Villa Salobre</h1>
+          <h1 className="display-xl reveal-up mt-6 text-background">{contenido.nombre}</h1>
           <p className="reveal-up mt-5 font-serif text-2xl italic text-background/90 md:text-3xl">
-            A un paso del mar, lejos de todo lo demás
+            {contenido.tagline}
           </p>
           <div className="reveal-up mt-10 flex flex-wrap gap-4">
             <Button asChild variant="onImage" size="editorial">

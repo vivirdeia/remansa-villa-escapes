@@ -182,9 +182,9 @@ function VillaPoniente() {
             <span className="size-2 rounded-full bg-poniente" />
             <p className="eyebrow text-background/80">Remansa · Villa 02</p>
           </div>
-          <h1 className="display-xl reveal-up mt-6 text-background">Villa Poniente</h1>
+          <h1 className="display-xl reveal-up mt-6 text-background">{contenido.nombre}</h1>
           <p className="reveal-up mt-5 font-serif text-2xl italic text-background/90 md:text-3xl">
-            Un atardecer distinto cada noche
+            {contenido.tagline}
           </p>
           <div className="reveal-up mt-10 flex flex-wrap gap-4">
             <Button asChild variant="onImage" size="editorial">
