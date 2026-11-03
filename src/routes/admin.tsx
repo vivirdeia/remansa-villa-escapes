@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import { LogOut, RotateCcw } from "lucide-react";
@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { ContenidoWeb } from "@/components/admin/ContenidoWeb";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 import { eur, villas, type VillaId } from "@/lib/remansa-data";
 import {
@@ -62,6 +63,7 @@ type SeccionId = (typeof secciones)[number]["id"];
 /* ---------------- pantalla ---------------- */
 
 function Admin() {
+  const navigate = useNavigate();
   const [dentro, setDentro] = useState(false);
   const [seccion, setSeccion] = useState<SeccionId>("calendario");
 
@@ -124,6 +126,26 @@ function Admin() {
                 <span className="sr-only sm:hidden">Salir</span>
               </button>
             </div>
+          </div>
+
+          <div className="mt-3 flex items-center gap-3">
+            <Label htmlFor="vista-admin" className="text-xs uppercase tracking-[0.14em] text-muted-foreground">
+              Vista
+            </Label>
+            <Select
+              value="admin"
+              onValueChange={(value) => {
+                if (value === "mi-estancia") void navigate({ to: "/mi-estancia" });
+              }}
+            >
+              <SelectTrigger id="vista-admin" className="h-11 w-44 rounded-none shadow-none">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent className="rounded-none">
+                <SelectItem value="admin" className="min-h-11 rounded-none">Admin</SelectItem>
+                <SelectItem value="mi-estancia" className="min-h-11 rounded-none">Mi estancia</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
 
           {/* Navegación mobile: pestañas con scroll horizontal */}
