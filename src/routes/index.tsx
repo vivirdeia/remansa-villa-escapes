@@ -17,17 +17,17 @@ import salobreCard from "@/assets/villa-salobre.jpg";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Remansa — Tres refugios frente al Mediterráneo" },
+      { title: "Remansa | Villas de alquiler vacacional en Jávea" },
       {
         name: "description",
         content:
-          "Tres villas de alquiler con carácter propio en la costa mediterránea. Luz, sal y calma para desconectar de verdad.",
+          "Descubre Azahar, Poniente y Salobre: tres villas con carácter propio en la costa de Jávea. Luz, brisa y calma para tus vacaciones junto al Mediterráneo.",
       },
-      { property: "og:title", content: "Remansa — Tres refugios frente al Mediterráneo" },
+      { property: "og:title", content: "Remansa | Villas de alquiler vacacional en Jávea" },
       {
         property: "og:description",
         content:
-          "Villas boutique en la costa mediterránea: Azahar, Poniente y Salobre. Pensadas para desconectar de verdad.",
+          "Descubre Azahar, Poniente y Salobre: tres villas con carácter propio en la costa de Jávea. Luz, brisa y calma para tus vacaciones junto al Mediterráneo.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
